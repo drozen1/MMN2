@@ -140,6 +140,7 @@ public class Solution {
                     "    CHECK (testid > 0),\n" +
                     "    CHECK (salary >= 0)\n" +
                     ")");
+
             pstmt.execute();
 
         } catch (SQLException e) {
