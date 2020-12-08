@@ -72,6 +72,8 @@ public class Example {
         su.setName("aa");
 
         r2 = Solution.addSupervisor(su); //ok
+        su.setId(8);
+        r2 = Solution.addSupervisor(su); //ok
         r2 = Solution.addSupervisor(su); //alredy exists
         su.setSalary(-1);
 
@@ -80,7 +82,22 @@ public class Example {
         su.setName(null);
         r2 = Solution.addSupervisor(su); //bad args
 
+        ReturnValue r33 = Solution.supervisorOverseeTest(5, 1, 1); //ok
+        ReturnValue r44 = Solution.supervisorOverseeTest(5, 2, 1); //ok
+        ReturnValue r55 = Solution.supervisorOverseeTest(5, 1, 1); //alredy exists
+        ReturnValue r66 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
+        ReturnValue r77 = Solution.supervisorOverseeTest(5, 21, 1); //doesnt exists
+        ReturnValue r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
 
+        ReturnValue r333 = Solution.studentWaiveTest(345088199, 1, 1); //ok
+        ReturnValue r444 = Solution.studentWaiveTest(345088199, 1, 1); //doesnt exists
+        ReturnValue r555 = Solution.supervisorOverseeTest(345088199, 2, 2); //doesnt exists
+        ReturnValue r666 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
+
+        ReturnValue w1 = Solution.supervisorStopsOverseeTest(5, 1, 1); //ok
+        ReturnValue w2 = Solution.supervisorStopsOverseeTest(345088199, 1, 1); //doesnt exists
+        ReturnValue s3 = Solution.supervisorStopsOverseeTest(5, 2, 3); //doesnt exists
+        ReturnValue s4 = Solution.supervisorStopsOverseeTest(5, 6, 1); //doesnt exists
 
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");

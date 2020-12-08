@@ -167,14 +167,14 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             //OVERSEES
-            pstmt = connection.prepareStatement("CREATE TABLE oversees\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE Oversees\n" +
             "(\n" +
                     "    testid integer NOT NULL,\n" +
                     "    supervisorid integer NOT NULL,\n" +
                     "    semester integer NOT NULL,\n" +
                     "    PRIMARY KEY (supervisorid, testid, semester),\n" + //CHANGE
                     "    FOREIGN KEY (supervisorid) \n" +
-                    "    REFERENCES Student(id)\n" +
+                    "    REFERENCES Supervisor(id)\n" +
                     "    ON DELETE CASCADE, \n"+
                     "    FOREIGN KEY (testid, semester) \n" +
                     "    REFERENCES Test(id,semester)\n" +
@@ -453,7 +453,6 @@ public class Solution {
         InitialState.dropInitialState();
         //drop your tables here
 
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
@@ -862,14 +861,107 @@ public class Solution {
     }
 
     public static ReturnValue studentWaiveTest(Integer studentID, Integer testID, Integer semester) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        int res = 0;
+        try {
+            pstmt = connection.prepareStatement(
+                    "DELETE FROM Takes " +
+                            "WHERE testid = ? AND studentid = ? AND semester = ?");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, studentID);
+            pstmt.setInt(3, semester);
+            res = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return ERROR;
+        }
+        finally {
+            try {
+                if (res == 0){
+                    return NOT_EXISTS;
+                }
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 
     public static ReturnValue supervisorOverseeTest(Integer supervisorID, Integer testID, Integer semester) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("INSERT INTO Oversees (testid,supervisorid, semester) " +
+                    "VALUES (?, ?, ?);");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, supervisorID);
+            pstmt.setInt(3, semester);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            if(Integer.valueOf(e.getSQLState()) == 23503) { //FOREIGN_KEY_VIOLATION(23503),
+                return NOT_EXISTS;
+            }
+            if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
+                return ALREADY_EXISTS;
+            }
+            return ERROR;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 
     public static ReturnValue supervisorStopsOverseeTest(Integer supervisorID, Integer testID, Integer semester) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        int res = 0;
+        try {
+            pstmt = connection.prepareStatement(
+                    "DELETE FROM Oversees " +
+                            "WHERE testid = ? AND supervisorid = ? AND semester = ?");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, supervisorID);
+            pstmt.setInt(3, semester);
+            res = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return ERROR;
+        }
+        finally {
+            try {
+                if (res == 0){
+                    return NOT_EXISTS;
+                }
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 
