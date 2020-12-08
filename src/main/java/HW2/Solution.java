@@ -23,23 +23,39 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //TEST
-            pstmt = connection.prepareStatement("CREATE TABLE Test\n" +
+
+
+            pstmt = connection.prepareStatement("CREATE TABLE test\n" +
                     "(\n" +
-                    "    test_id integer NOT NULL,\n" +
-                    "    semester integer NOT NULL,\n" +
+                    "    id integer,\n" +
+                    "    semester integer,\n" +
                     "    time integer NOT NULL,\n" +
                     "    room integer NOT NULL,\n" +
                     "    day integer NOT NULL,\n" +
                     "    credit_points integer NOT NULL,\n" +
-                    "    UNIQUE (test_id,semester),\n" +
-                    "    PRIMARY KEY (test_id),\n" +
-                    "    PRIMARY KEY (semester),\n" +
-                    "    CHECK (test_id > 0)\n" +
+                    "    PRIMARY KEY (id,semester),\n" +
+                    "    CHECK (id > 0),\n" +
+                    "    CHECK (room > 0),\n" +
                     "    CHECK (credit_points > 0)\n" +
-                    "    CHECK (room > 0)\n" +
                     ")");
             pstmt.execute();
+            //TEST
+//            pstmt = connection.prepareStatement("CREATE TABLE Test\n" +
+//                    "(\n" +
+//                    "    test_id integer NOT NULL,\n" +
+//                    "    semester integer NOT NULL,\n" +
+//                    "    time integer NOT NULL,\n" +
+//                    "    room integer NOT NULL,\n" +
+//                    "    day integer NOT NULL,\n" +
+//                    "    credit_points integer NOT NULL,\n" +
+//                    "    UNIQUE (test_id,semester),\n" +
+//                    "    PRIMARY KEY (test_id),\n" +
+//                    "    PRIMARY KEY (semester),\n" +
+//                    "    CHECK (test_id > 0)\n" +
+//                    "    CHECK (credit_points > 0)\n" +
+//                    "    CHECK (room > 0)\n" +
+//                    ")");
+//            pstmt.execute();
 //            //STUDENT
 //            pstmt = connection.prepareStatement("CREATE TABLE Student\n" +
 //                    "(\n" +
