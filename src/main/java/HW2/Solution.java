@@ -45,6 +45,12 @@ public class Solution {
                     "    PRIMARY KEY (id,semester),\n" +
                     "    CHECK (id > 0),\n" +
                     "    CHECK (room > 0),\n" +
+                    "    CHECK (semester > 0),\n" +
+                    "    CHECK (semester < 4),\n" +
+                    "    CHECK (time > 0),\n" +
+                    "    CHECK (time < 4),\n" +
+                    "    CHECK (day > 0),\n" +
+                    "    CHECK (day < 32),\n" +
                     "    CHECK (credit_points > 0)\n" +
                     ")");
             pstmt.execute();
@@ -133,11 +139,18 @@ public class Solution {
             pstmt = connection.prepareStatement("CREATE TABLE takes\n" +
                     "(\n" +
                     "    testid integer NOT NULL,\n" +
-                    "    salary integer NOT NULL,\n" +
-                    "    PRIMARY KEY (testid),\n" +
-                    "    CHECK (testid > 0),\n" +
-                    "    CHECK (salary >= 0)\n" +
+                    "    studentid integer NOT NULL,\n" +
+                    "    semester integer NOT NULL,\n" +
+                    "    PRIMARY KEY (studentid),\n" +
+                    "    FOREIGN KEY (studentid) \n" +
+                    "    REFERENCES Student(id)\n" +
+                    "    ON DELETE CASCADE, \n"+
+                    "    FOREIGN KEY (testid, semester) \n" +
+                    "    REFERENCES Test(id,semester)\n" +
+                    "    ON DELETE CASCADE \n"+
                     ")");
+
+            /////////////////////////////////////////////////////////////can be BUG : semester isnot foreign key
 
             pstmt.execute();
 
@@ -161,10 +174,17 @@ public class Solution {
         try {
             //OVERSEES
             pstmt = connection.prepareStatement("CREATE TABLE oversees\n" +
-                    "(\n" +
-                    "    supervisorid integer NOT NULL,\n" +
+            "(\n" +
                     "    testid integer NOT NULL,\n" +
-                    "    semester integer NOT NULL\n" +
+                    "    supervisorid integer NOT NULL,\n" +
+                    "    semester integer NOT NULL,\n" +
+                    "    PRIMARY KEY (supervisorid),\n" +
+                    "    FOREIGN KEY (supervisorid) \n" +
+                    "    REFERENCES Student(id)\n" +
+                    "    ON DELETE CASCADE, \n"+
+                    "    FOREIGN KEY (testid, semester) \n" +
+                    "    REFERENCES Test(id,semester)\n" +
+                    "    ON DELETE CASCADE \n"+
                     ")");
 
             pstmt.execute();
@@ -191,11 +211,12 @@ public class Solution {
     public static void dropTables() {
         InitialState.dropInitialState();
         //drop your tables here
+        dropTablesTakes();
+        dropTablesOversees();
         dropTablesTest();
         dropTablesStudent();
         dropTablesSupervisor();
-        dropTablesTakes();
-        dropTablesOversees();
+
     }
 
     public static void dropTablesTest() {
