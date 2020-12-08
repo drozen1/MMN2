@@ -30,7 +30,6 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE test\n" +
                     "(\n" +
                     "    id integer,\n" +
@@ -71,7 +70,6 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE Student\n" +
                     "(\n" +
                     "    id integer NOT NULL,\n" +
@@ -102,7 +100,6 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE Supervisor\n" +
                     "(\n" +
                     "    id integer NOT NULL,\n" +
@@ -132,13 +129,12 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE takes\n" +
                     "(\n" +
                     "    testid integer NOT NULL,\n" +
                     "    studentid integer NOT NULL,\n" +
                     "    semester integer NOT NULL,\n" +
-                    "    PRIMARY KEY (studentid),\n" +
+                    "    PRIMARY KEY (studentid, testid, semester),\n" + //CHANGE
                     "    FOREIGN KEY (studentid) \n" +
                     "    REFERENCES Student(id)\n" +
                     "    ON DELETE CASCADE, \n"+
@@ -148,6 +144,7 @@ public class Solution {
                     ")");
 
             /////////////////////////////////////////////////////////////can be BUG : semester isnot foreign key
+            //I check, it works :)
 
             pstmt.execute();
 
@@ -175,7 +172,7 @@ public class Solution {
                     "    testid integer NOT NULL,\n" +
                     "    supervisorid integer NOT NULL,\n" +
                     "    semester integer NOT NULL,\n" +
-                    "    PRIMARY KEY (supervisorid),\n" +
+                    "    PRIMARY KEY (supervisorid, testid, semester),\n" + //CHANGE
                     "    FOREIGN KEY (supervisorid) \n" +
                     "    REFERENCES Student(id)\n" +
                     "    ON DELETE CASCADE, \n"+
@@ -483,39 +480,31 @@ public class Solution {
     public static ReturnValue addTest(Test test) {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
-        int id=test.getId();
-        int room = test.getRoom();
-        int semester = test.getSemester();
-        int time = test.getTime();
-        int day = test.getDay();
-        int credit_points = test.getCreditPoints();
-        if(id < 1 || room < 1 || credit_points < 1 || semester < 1 || semester > 3 || time < 1 || time > 3||
-                day < 1 || day > 31){
-            return BAD_PARAMS;
-        }
-        int res = 0;
         try {
 
             pstmt = connection.prepareStatement("INSERT INTO Test(id,semester, time, room, day, credit_points) " +
                     "VALUES (?, ?, ?, ?, ?, ?);");
 
-            pstmt.setInt(1, id);
-            pstmt.setInt(2, semester);
-            pstmt.setInt(3, time);
-            pstmt.setInt(4, room);
-            pstmt.setInt(5, day);
-            pstmt.setInt(6, credit_points);
-            res = pstmt.executeUpdate();
+            pstmt.setInt(1, test.getId());
+            pstmt.setInt(2, test.getSemester());
+            pstmt.setInt(3, test.getTime());
+            pstmt.setInt(4, test.getRoom());
+            pstmt.setInt(5, test.getDay());
+            pstmt.setInt(6, test.getCreditPoints());
+            pstmt.executeUpdate();
 
         } catch (SQLException e) {
             //e.printStackTrace()();
+            if(Integer.valueOf(e.getSQLState()) == 23514) { //CHECK_VIOLIATION (23514)
+                return BAD_PARAMS;
+            }
+            if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
+                return ALREADY_EXISTS;
+            }
             return ERROR;
         }
         finally {
             try {
-                if (res == 0){
-                    return ALREADY_EXISTS;
-                }
                 pstmt.close();
             } catch (SQLException e) {
                 //e.printStackTrace()();
@@ -586,7 +575,6 @@ public class Solution {
                             "WHERE id = ? AND semester = ?");
             pstmt.setInt(1, testID);
             pstmt.setInt(2, semester);
-
             res = pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -614,33 +602,29 @@ public class Solution {
     public static ReturnValue addStudent(Student student) {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
-        int id= student.getId();
-        String name = student.getName();
-        String faculty = student.getFaculty();
-        int credit_points = student.getCreditPoints();
-        if(id < 1 || credit_points < 0 || faculty == null || name == null){
-            return BAD_PARAMS;
-        }
-        int res = 0;
         try {
             pstmt = connection.prepareStatement("INSERT INTO Student(id,student_name, faculty, credit_points) " +
                     "VALUES (?, ?, ?, ?);");
 
-            pstmt.setInt(1, id);
-            pstmt.setString(2, name);
-            pstmt.setString(3, faculty);
-            pstmt.setInt(6, credit_points);
-            res = pstmt.executeUpdate();
+            pstmt.setInt(1, student.getId());
+            pstmt.setString(2, student.getName());
+            pstmt.setString(3, student.getFaculty());
+            pstmt.setInt(4, student.getCreditPoints());
+            pstmt.executeUpdate();
 
         } catch (SQLException e) {
             //e.printStackTrace()();
+            if(Integer.valueOf(e.getSQLState()) == 23514 || //CHECK_VIOLIATION (23514)
+                    Integer.valueOf(e.getSQLState()) ==23502) {//NOT_NULL_VIOLATION (23502),
+                return BAD_PARAMS;
+            }
+            if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
+                return ALREADY_EXISTS;
+            }
             return ERROR;
         }
         finally {
             try {
-                if (res == 0){
-                    return ALREADY_EXISTS;
-                }
                 pstmt.close();
             } catch (SQLException e) {
                 //e.printStackTrace()();
@@ -707,7 +691,6 @@ public class Solution {
                             "WHERE id = ? ");
             pstmt.setInt(1, studentID);
             res = pstmt.executeUpdate();
-
         } catch (SQLException e) {
             //e.printStackTrace()();
             return ERROR;
@@ -733,30 +716,27 @@ public class Solution {
     public static ReturnValue addSupervisor(Supervisor supervisor) {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
-        int id= supervisor.getId();
-        String name = supervisor.getName();
-        int salary = supervisor.getSalary();
-        if(id < 1 || salary < 0  || name == null){
-            return BAD_PARAMS;
-        }
-        int res = 0;
         try {
             pstmt = connection.prepareStatement("INSERT INTO Supervisor(id,supervisor_name, salary) " +
                     "VALUES (?, ?, ?);");
-            pstmt.setInt(1, id);
-            pstmt.setString(2, name);
-            pstmt.setInt(3, salary);
-            res = pstmt.executeUpdate();
+            pstmt.setInt(1, supervisor.getId());
+            pstmt.setString(2, supervisor.getName());
+            pstmt.setInt(3, supervisor.getSalary());
+            pstmt.executeUpdate();
 
         } catch (SQLException e) {
             //e.printStackTrace()();
+            if(Integer.valueOf(e.getSQLState()) == 23514 || //CHECK_VIOLIATION (23514)
+                    Integer.valueOf(e.getSQLState()) ==23502) {//NOT_NULL_VIOLATION (23502),
+                return BAD_PARAMS;
+            }
+            if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
+                return ALREADY_EXISTS;
+            }
             return ERROR;
         }
         finally {
             try {
-                if (res == 0){
-                    return ALREADY_EXISTS;
-                }
                 pstmt.close();
             } catch (SQLException e) {
                 //e.printStackTrace()();
@@ -846,6 +826,38 @@ public class Solution {
     }
 
     public static ReturnValue studentAttendTest(Integer studentID, Integer testID, Integer semester) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+
+        try {
+            pstmt = connection.prepareStatement("INSERT INTO Takes (testid,studentid, semester) " +
+                    "VALUES (?, ?, ?);");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, studentID);
+            pstmt.setInt(3, semester);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            if(Integer.valueOf(e.getSQLState()) == 23503) { //FOREIGN_KEY_VIOLATION(23503),
+                return NOT_EXISTS;
+            }
+            if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
+                return ALREADY_EXISTS;
+            }
+            return ERROR;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 

@@ -1,6 +1,8 @@
 package HW2;
 
 import HW2.business.ReturnValue;
+import HW2.business.Student;
+import HW2.business.Supervisor;
 import HW2.business.Test;
 import HW2.data.DBConnector;
 
@@ -15,11 +17,9 @@ public class Example {
 
     public static void main(String[] args) {
 
-        //javaStringExample();
-        //arrayListExample();
         Solution.dropTables();
-        System.out.println("Creating hello_world Table");
         Solution.createTables();
+
         Test t = new Test();
         t.setId(1);
         t.setSemester(1);
@@ -27,16 +27,60 @@ public class Example {
         t.setTime(1);
         t.setCreditPoints(8);
         t.setRoom(7);
-        ReturnValue r= Solution.addTest(t);
+
+        ReturnValue r= Solution.addTest(t); //OK
+        r= Solution.addTest(t); //alredy exists
+
+        t.setId(2);
+        r= Solution.addTest(t); //OK
+
+        t.setSemester(5);
+        r= Solution.addTest(t); //invalid semester
+
+        r = Solution.deleteTest(12,3); //not exists
+        r = Solution.deleteTest(1,3);   //not exists
+        r = Solution.deleteTest(12,1); //not exists
+
+        Student s = new Student();
+        s.setFaculty("CS");
+        s.setName("karen");
+        s.setId(345088199);
+        s.setCreditPoints(0);
+
+        ReturnValue r2= Solution.addStudent(s); //ok
+        r2= Solution.addStudent(s); //alredy exists
+        r2 = Solution.deleteStudent(0); //doesnt exists
+
+        s.setId(-1);
+        r2= Solution.addStudent(s); //bad params
+
+        s.setId(345088199);
+        s.setName(null);
+        r2= Solution.addStudent(s); //bad params
+
+        ReturnValue r3 = Solution.studentAttendTest(345088199, 1, 1); //ok
+        ReturnValue r4 = Solution.studentAttendTest(345088199, 1, 1); //alredy exists
+        ReturnValue r5 = Solution.studentAttendTest(345088199, 2, 1); //ok
+        ReturnValue r6 = Solution.studentAttendTest(0, 2, 1); //doesnt exists
+        ReturnValue r7 = Solution.studentAttendTest(345088199, 21, 1); //doesnt exists
+        ReturnValue r8 = Solution.studentAttendTest(345088199, 1, 3); //doesnt exists
+        ReturnValue r9 = Solution.studentAttendTest(345088199, 1, 6); //doesnt exists
+
+        Supervisor su = new Supervisor();
+        su.setId(5);
+        su.setSalary(8);
+        su.setName("aa");
+
+        r2 = Solution.addSupervisor(su); //ok
+        r2 = Solution.addSupervisor(su); //alredy exists
+        su.setSalary(-1);
+
+        r2 = Solution.addSupervisor(su); //bad args
+        su.setSalary(8);
+        su.setName(null);
+        r2 = Solution.addSupervisor(su); //bad args
 
 
-        t.setSemester(2);
-        r=Solution.addTest(t);
-        Test t2 = Solution.getTestProfile(1,1);
-        t2 = Solution.getTestProfile(11,1);
-        r = Solution.deleteTest(1,1);
-        r = Solution.deleteTest(1,1);
-        r = Solution.deleteTest(11,1);
 
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
