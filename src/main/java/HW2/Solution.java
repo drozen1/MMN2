@@ -22,6 +22,18 @@ public class Solution {
         //create your tables here
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
+        create_test_table();
+        create_student_table();
+        create_supervisor_table();
+        create_takes_table();
+
+
+
+    }
+
+    public static void create_test_table() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
         try {
             //TEST
             pstmt = connection.prepareStatement("CREATE TABLE test\n" +
@@ -39,7 +51,26 @@ public class Solution {
                     ")");
             pstmt.execute();
 
-//            //STUDENT
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public static void create_student_table() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE Student\n" +
                     "(\n" +
                     "    id integer NOT NULL,\n" +
@@ -52,7 +83,25 @@ public class Solution {
                     ")");
             pstmt.execute();
 
-            //SUPERVISOR
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void create_supervisor_table() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //TEST
             pstmt = connection.prepareStatement("CREATE TABLE Supervisor\n" +
                     "(\n" +
                     "    id integer NOT NULL,\n" +
@@ -63,22 +112,48 @@ public class Solution {
                     "    CHECK (salary >= 0)\n" +
                     ")");
             pstmt.execute();
-        } catch (SQLException e) {
-            //e.printStackTrace()();
-        }
-        finally {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                //e.printStackTrace()();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                //e.printStackTrace()();
-            }
-        }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void create_takes_table() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //TEST
+            pstmt = connection.prepareStatement("CREATE TABLE takes\n" +
+                    "(\n" +
+                    "    testid integer NOT NULL,\n" +
+                    "    salary integer NOT NULL,\n" +
+                    "    PRIMARY KEY (testid),\n" +
+                    "    CHECK (testid > 0),\n" +
+                    "    CHECK (salary >= 0)\n" +
+                    ")");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void clearTables() {
@@ -87,7 +162,7 @@ public class Solution {
 
     public static void dropTables() {
         InitialState.dropInitialState();
-		//drop your tables here
+        //drop your tables here
 
         //TEST
         Connection connection = DBConnector.getConnection();
@@ -95,6 +170,7 @@ public class Solution {
         try {
             pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Test");
             pstmt.execute();
+
         } catch (SQLException e) {
             //e.printStackTrace()();
         }
@@ -114,7 +190,7 @@ public class Solution {
 
     public static ReturnValue addTest(Test test) {
 
-       return OK;
+        return OK;
     }
 
     public static Test getTestProfile(Integer testID, Integer semester) {
@@ -122,7 +198,7 @@ public class Solution {
     }
 
     public static ReturnValue deleteTest(Integer testID, Integer semester) {
-		return OK;
+        return OK;
     }
 
     public static ReturnValue addStudent(Student student) {
@@ -158,11 +234,11 @@ public class Solution {
     }
 
     public static ReturnValue supervisorOverseeTest(Integer supervisorID, Integer testID, Integer semester) {
-       return OK;
+        return OK;
     }
 
     public static ReturnValue supervisorStopsOverseeTest(Integer supervisorID, Integer testID, Integer semester) {
-       return OK;
+        return OK;
     }
 
     public static Float averageTestCost() {
@@ -205,4 +281,3 @@ public class Solution {
         return new ArrayList<Integer>();
     }
 }
-
