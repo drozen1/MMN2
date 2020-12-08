@@ -18,7 +18,70 @@ import static HW2.business.ReturnValue.*;
 public class Solution {
     public static void createTables() {
         InitialState.createInitialState();
+
         //create your tables here
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //TEST
+            pstmt = connection.prepareStatement("CREATE TABLE Test\n" +
+                    "(\n" +
+                    "    test_id integer NOT NULL,\n" +
+                    "    semester integer NOT NULL,\n" +
+                    "    time integer NOT NULL,\n" +
+                    "    room integer NOT NULL,\n" +
+                    "    day integer NOT NULL,\n" +
+                    "    credit_points integer NOT NULL,\n" +
+                    "    UNIQUE (test_id,semester),\n" +
+                    "    PRIMARY KEY (test_id),\n" +
+                    "    PRIMARY KEY (semester),\n" +
+                    "    CHECK (test_id > 0)\n" +
+                    "    CHECK (credit_points > 0)\n" +
+                    "    CHECK (room > 0)\n" +
+                    ")");
+            pstmt.execute();
+//            //STUDENT
+//            pstmt = connection.prepareStatement("CREATE TABLE Student\n" +
+//                    "(\n" +
+//                    "    student_id integer NOT NULL,\n" +
+//                    "    student_name text NOT NULL,\n" +
+//                    "    faculty text NOT NULL,\n" +
+//                    "    credit_points integer NOT NULL,\n" +
+//                    "    UNIQUE (student_id),\n" +
+//                    "    PRIMARY KEY (student_id),\n" +
+//                    "    CHECK (student_id > 0)\n" +
+//                    "    CHECK (credit_points >= 0)\n" +
+//                    ")");
+//            pstmt.execute();
+//
+//            //SUPERVISOR
+//            pstmt = connection.prepareStatement("CREATE TABLE Supervisor\n" +
+//                    "(\n" +
+//                    "    supervisor_id integer NOT NULL,\n" +
+//                    "    supervisor_name text NOT NULL,\n" +
+//                    "    salary integer NOT NULL,\n" +
+//                    "    UNIQUE (supervisor_id),\n" +
+//                    "    PRIMARY KEY (supervisor_id),\n" +
+//                    "    CHECK (supervisor_id > 0)\n" +
+//                    "    CHECK (salary >= 0)\n" +
+//                    ")");
+//            pstmt.execute();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+
     }
 
     public static void clearTables() {
@@ -28,9 +91,32 @@ public class Solution {
     public static void dropTables() {
         InitialState.dropInitialState();
 		//drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Test");
+            pstmt.execute();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ReturnValue addTest(Test test) {
+
        return OK;
     }
 
