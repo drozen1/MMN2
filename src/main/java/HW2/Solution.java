@@ -27,8 +27,6 @@ public class Solution {
         create_supervisor_table();
         create_takes_table();
 
-
-
     }
 
     public static void create_test_table() {
@@ -164,12 +162,134 @@ public class Solution {
     public static void dropTables() {
         InitialState.dropInitialState();
         //drop your tables here
+        dropTablesTest();
+        dropTablesStudent();
+        dropTablesSupervisor();
+        dropTablesTakes();
+        dropTablesOversees();
+    }
+
+    public static void dropTablesTest() {
+        InitialState.dropInitialState();
+        //drop your tables here
 
         //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Test");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void dropTablesStudent() {
+        InitialState.dropInitialState();
+        //drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Student");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void dropTablesSupervisor() {
+        InitialState.dropInitialState();
+        //drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Supervisor");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void dropTablesTakes() {
+        InitialState.dropInitialState();
+        //drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Takes");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void dropTablesOversees() {
+        InitialState.dropInitialState();
+        //drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Oversees");
             pstmt.execute();
 
         } catch (SQLException e) {
