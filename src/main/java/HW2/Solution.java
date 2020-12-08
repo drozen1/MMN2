@@ -539,21 +539,7 @@ public class Solution {
             pstmt.setInt(2, semester);
             ResultSet results = pstmt.executeQuery();
             results.next();
-            int id = results.getInt(1);
-            int sem = results.getInt(2);
-            int time = results.getInt(3);
-            int room = results.getInt(4);
-            int day = results.getInt(5);
-            int cred_points = results.getInt(6);
-            results.close();
-            Test t = new Test();
-            t.setId(id);
-            t.setSemester(sem);
-            t.setDay(day);
-            t.setTime(time);
-            t.setCreditPoints(cred_points);
-            t.setRoom(room);
-            return t;
+            return result_set_to_test(results);
         } catch (SQLException e) {
             //e.printStackTrace()();
             return Test.badTest();
@@ -570,6 +556,24 @@ public class Solution {
                 //e.printStackTrace()();
             }
         }
+    }
+
+    public static Test result_set_to_test (ResultSet results) throws SQLException {
+        int id = results.getInt(1);
+        int sem = results.getInt(2);
+        int time = results.getInt(3);
+        int room = results.getInt(4);
+        int day = results.getInt(5);
+        int cred_points = results.getInt(6);
+        results.close();
+        Test t = new Test();
+        t.setId(id);
+        t.setSemester(sem);
+        t.setDay(day);
+        t.setTime(time);
+        t.setCreditPoints(cred_points);
+        t.setRoom(room);
+        return t;
     }
 
     public static ReturnValue deleteTest(Integer testID, Integer semester) {
@@ -659,19 +663,7 @@ public class Solution {
             pstmt.setInt(1, studentID);
             ResultSet results = pstmt.executeQuery();
             results.next();
-
-            int id = results.getInt(1);
-            String name = results.getString(2);
-            String faculty = results.getString(3);
-            int cred_points = results.getInt(4);
-
-            results.close();
-            Student s = new Student();
-            s.setId(id);
-            s.setName(name);
-            s.setFaculty(faculty);
-            s.setCreditPoints(cred_points);
-            return s;
+            return result_set_to_student(results);
         } catch (SQLException e) {
             //e.printStackTrace()();
             return Student.badStudent();
@@ -688,6 +680,21 @@ public class Solution {
                 //e.printStackTrace()();
             }
         }
+    }
+
+    public static Student result_set_to_student (ResultSet results) throws SQLException {
+        int id = results.getInt(1);
+        String name = results.getString(2);
+        String faculty = results.getString(3);
+        int cred_points = results.getInt(4);
+
+        results.close();
+        Student s = new Student();
+        s.setId(id);
+        s.setName(name);
+        s.setFaculty(faculty);
+        s.setCreditPoints(cred_points);
+        return s;
     }
 
     public static ReturnValue deleteStudent(Integer studentID) {
@@ -773,16 +780,7 @@ public class Solution {
             ResultSet results = pstmt.executeQuery();
             results.next();
 
-            int id = results.getInt(1);
-            String name = results.getString(2);
-            int salary = results.getInt(3);
-
-            results.close();
-            Supervisor s = new Supervisor();
-            s.setId(id);
-            s.setName(name);
-            s.setSalary(salary);
-            return s;
+            return result_set_to_supervisor(results);
         } catch (SQLException e) {
             //e.printStackTrace()();
             return Supervisor.badSupervisor();
@@ -799,6 +797,19 @@ public class Solution {
                 //e.printStackTrace()();
             }
         }
+    }
+
+    public static Supervisor result_set_to_supervisor (ResultSet results) throws SQLException {
+        int id = results.getInt(1);
+        String name = results.getString(2);
+        int salary = results.getInt(3);
+
+        results.close();
+        Supervisor s = new Supervisor();
+        s.setId(id);
+        s.setName(name);
+        s.setSalary(salary);
+        return s;
     }
 
     public static ReturnValue deleteSupervisor(Integer supervisorID) {

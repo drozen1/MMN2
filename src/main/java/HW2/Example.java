@@ -32,8 +32,8 @@ public class Example {
 
         t.setSemester(2);
         r=Solution.addTest(t);
-       // Test t2 = Solution.getTestProfile(1,1);
-
+        Test t2 = Solution.getTestProfile(1,1);
+        t2 = Solution.getTestProfile(11,1);
         r = Solution.deleteTest(1,1);
         r = Solution.deleteTest(1,1);
         r = Solution.deleteTest(11,1);
