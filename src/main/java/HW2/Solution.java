@@ -3,10 +3,7 @@ package HW2;
 import HW2.business.*;
 import HW2.data.DBConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import HW2.data.PostgreSQLErrorCodes;
 
@@ -206,6 +203,131 @@ public class Solution {
 
     public static void clearTables() {
         //clear your tables here
+        clearTakesTable();
+        clearOverseesTable();
+        clearTestTable();
+        clearStudentTable();
+        clearSupervisorTable();
+    }
+
+    public static void clearTestTable() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DELETE FROM Test");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void clearStudentTable() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DELETE FROM Student");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void clearSupervisorTable() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DELETE FROM Supervisor");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void clearTakesTable() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DELETE FROM Takes");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void clearOverseesTable() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DELETE FROM Oversees");
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static void dropTables() {
@@ -216,7 +338,6 @@ public class Solution {
         dropTablesTest();
         dropTablesStudent();
         dropTablesSupervisor();
-
     }
 
     public static void dropTablesTest() {
@@ -360,15 +481,129 @@ public class Solution {
     }
 
     public static ReturnValue addTest(Test test) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        int id=test.getId();
+        int room = test.getRoom();
+        int semester = test.getSemester();
+        int time = test.getTime();
+        int day = test.getDay();
+        int credit_points = test.getCreditPoints();
+        if(id < 0 || room < 0 || credit_points < 0 || semester < 1 || semester > 3 || time < 1 || time > 3||
+                day < 1 || day > 31){
+            return BAD_PARAMS;
+        }
+        int res = 0;
+        try {
 
+            pstmt = connection.prepareStatement("INSERT INTO Test(id,semester, time, room, day, credit_points) " +
+                    "VALUES (?, ?, ?, ?, ?, ?);");
+
+            pstmt.setInt(1, id);
+            pstmt.setInt(2, semester);
+            pstmt.setInt(3, time);
+            pstmt.setInt(4, room);
+            pstmt.setInt(5, day);
+            pstmt.setInt(6, credit_points);
+            res = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return ERROR;
+        }
+        finally {
+            try {
+                if (res == 0){
+                    return ALREADY_EXISTS;
+                }
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 
     public static Test getTestProfile(Integer testID, Integer semester) {
-        return new Test();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT * FROM Test " +
+                    "WHERE id = ? AND semester = ?");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, semester);
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            int id = results.getInt(1);
+            int sem = results.getInt(2);
+            int time = results.getInt(3);
+            int room = results.getInt(4);
+            int day = results.getInt(5);
+            int cred_points = results.getInt(6);
+            results.close();
+            Test t = new Test();
+            t.setId(id);
+            t.setSemester(sem);
+            t.setDay(day);
+            t.setTime(time);
+            t.setCreditPoints(cred_points);
+            t.setRoom(room);
+            return t;
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return Test.badTest();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ReturnValue deleteTest(Integer testID, Integer semester) {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        int res = 0;
+        try {
+            pstmt = connection.prepareStatement(
+                    "DELETE FROM Test " +
+                            "WHERE id = ? AND semester = ?");
+            pstmt.setInt(1, testID);
+            pstmt.setInt(2, semester);
+
+            res = pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return ERROR;
+        }
+        finally {
+            try {
+                if (res == 0){
+                    return NOT_EXISTS;
+                }
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
         return OK;
     }
 

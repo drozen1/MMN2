@@ -1,5 +1,7 @@
 package HW2;
 
+import HW2.business.ReturnValue;
+import HW2.business.Test;
 import HW2.data.DBConnector;
 
 import java.sql.Connection;
@@ -8,27 +10,45 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
 public class Example {
 
     public static void main(String[] args) {
 
-        javaStringExample();
-        arrayListExample();
+        //javaStringExample();
+        //arrayListExample();
         Solution.dropTables();
         System.out.println("Creating hello_world Table");
         Solution.createTables();
-        selectFromTable();
-        System.out.println("inserting main.data into table");
-        insertIntoTable();
-        selectFromTable();
-        System.out.println("updating main.data in table");
-        updateTable();
-        selectFromTable();
-        System.out.println("deleting main.data from table");
-        deleteFromTable();
-        selectFromTable();
-        dropTable();
+        Test t = new Test();
+        t.setId(1);
+        t.setSemester(1);
+        t.setDay(5);
+        t.setTime(1);
+        t.setCreditPoints(8);
+        t.setRoom(7);
+        ReturnValue r= Solution.addTest(t);
 
+
+        t.setSemester(2);
+        r=Solution.addTest(t);
+       // Test t2 = Solution.getTestProfile(1,1);
+
+        r = Solution.deleteTest(1,1);
+        r = Solution.deleteTest(1,1);
+        r = Solution.deleteTest(11,1);
+
+//        selectFromTable();
+//        System.out.println("inserting main.data into table");
+//        insertIntoTable();
+//        selectFromTable();
+//        System.out.println("updating main.data in table");
+//        updateTable();
+//        selectFromTable();
+//        System.out.println("deleting main.data from table");
+//        deleteFromTable();
+//        selectFromTable();
+//        dropTable();
 
     }
 
