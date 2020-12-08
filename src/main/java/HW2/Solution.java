@@ -26,7 +26,7 @@ public class Solution {
         create_student_table();
         create_supervisor_table();
         create_takes_table();
-
+        create_oversees_table();
     }
 
     public static void create_test_table() {
@@ -154,6 +154,35 @@ public class Solution {
             }
         }
     }
+
+    public static void create_oversees_table() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //OVERSEES
+            pstmt = connection.prepareStatement("CREATE TABLE oversees\n" +
+                    "(\n" +
+                    "    supervisorid integer NOT NULL,\n" +
+                    "    testid integer NOT NULL,\n" +
+                    "    semester integer NOT NULL\n" +
+                    ")");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public static void clearTables() {
         //clear your tables here
