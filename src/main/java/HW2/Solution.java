@@ -24,7 +24,38 @@ public class Solution {
         create_supervisor_table();
         create_takes_table();
         create_oversees_table();
+        create_sao();
     }
+
+    private static void create_sao() {
+
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            //OVERSEES
+            pstmt = connection.prepareStatement("CREATE VIEW SAO as\n" +
+                    "SELECT S.salary, S.id\n" +
+                    "FROM Supervisor S, Oversees O\n" +
+                    "WHERE (S.id=O.supervisorid);" );
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
 
     public static void create_test_table() {
         Connection connection = DBConnector.getConnection();
@@ -330,11 +361,40 @@ public class Solution {
     public static void dropTables() {
         InitialState.dropInitialState();
         //drop your tables here
+        dropsao();  /// drop view od oversees+ supervisors
         dropTablesTakes();
         dropTablesOversees();
         dropTablesTest();
         dropTablesStudent();
         dropTablesSupervisor();
+    }
+
+    private static void dropsao() {
+        InitialState.dropInitialState();
+        //drop your tables here
+
+        //TEST
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW SAO");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static void dropTablesTest() {

@@ -99,6 +99,8 @@ public class Example {
         ReturnValue s3 = Solution.supervisorStopsOverseeTest(5, 2, 3); //doesnt exists
         ReturnValue s4 = Solution.supervisorStopsOverseeTest(5, 6, 1); //doesnt exists
 
+
+        r44 = Solution.supervisorOverseeTest(5, 1, 1); //ok
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();
