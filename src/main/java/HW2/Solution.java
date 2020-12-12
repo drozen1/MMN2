@@ -23,6 +23,7 @@ public class Solution {
         create_oversees_and_takes();
         create_student_and_creditpoints();
         create_takes_and_students();
+        create_takes_and_students_and_tests();
         create_takes_and_tests();
     }
 
@@ -61,6 +62,32 @@ public class Solution {
             pstmt = connection.prepareStatement("CREATE VIEW Takes_and_students as\n" +
                     "SELECT S.id AS studentid, S.faculty, S.student_name, S.credit_points, T.semester, T.testid \n" +
                     "FROM Takes AS T INNER JOIN Student AS S ON T.studentid = S.id");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
+    private static void create_takes_and_students_and_tests() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Takes_and_students_and_tests as\n" +
+                    "SELECT A.studentid, A.faculty, A.student_name, A.credit_points AS student_credit_points, A.semester, A.testid , B.credit_points \n" +
+                    "FROM Takes_and_students AS A INNER JOIN Test AS B ON A.testid = B.id AND A.semester = B.semester");
 
             pstmt.execute();
 
@@ -463,6 +490,7 @@ public class Solution {
         drop_supervisor_and_oversees();  /// drop view od oversees+ supervisors
         drop_oversees_and_takes();
         drop_student_and_creditpoints();
+        drop_takes_and_students_and_test();
         drop_takes_and_students();
         drop_takes_and_tests();
 
@@ -481,6 +509,31 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("DROP VIEW Takes_and_students");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    private static void drop_takes_and_students_and_test() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Takes_and_students_and_tests");
             pstmt.execute();
 
         } catch (SQLException e) {
@@ -1219,18 +1272,16 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("SELECT COUNT(testid), salary  FROM Supervisor_and_oversees " +
+            pstmt = connection.prepareStatement("SELECT COUNT(testid) * salary AS wage FROM Supervisor_and_oversees " +
                     "WHERE supervisorid = ?" +
                     "GROUP BY salary");
 
             pstmt.setInt(1, supervisorID);
             ResultSet results = pstmt.executeQuery();
             results.next();
-            int salary = results.getInt(1);
-            int times = results.getInt(2);
+            int wage = results.getInt(1);
             results.close();
-            //TODO: change this!!!!
-            return salary * times;
+            return wage;
         } catch (SQLException e) {
             //e.printStackTrace()();
             return -1;
@@ -1296,7 +1347,36 @@ public class Solution {
     }
 
     public static Integer studentCreditPoints(Integer studentID) {
-        return 0;
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT SUM(credit_points) + student_credit_points AS total_credit_points " +
+                    "FROM Takes_and_students_and_tests " +
+                    "WHERE studentid = ? "+
+                    "GROUP BY student_credit_points");
+
+            pstmt.setInt(1, studentID);
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            int total_credit_points = results.getInt(1);
+            results.close();
+            return total_credit_points;
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return 0;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static Integer getMostPopularTest(String faculty) {

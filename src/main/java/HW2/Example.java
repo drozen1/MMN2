@@ -108,6 +108,9 @@ public class Example {
 
         a = Solution.testsThisSemester(11); //empty arraylist
 
+        int k = Solution.studentCreditPoints(345088199);  //8
+        int kk = Solution.studentCreditPoints(459); //0
+
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();
