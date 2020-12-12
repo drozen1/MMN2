@@ -1216,15 +1216,79 @@ public class Solution {
     }
 
     public static Integer getWage(Integer supervisorID) {
-        return 0;
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT COUNT(testid), salary  FROM Supervisor_and_oversees " +
+                    "WHERE supervisorid = ?" +
+                    "GROUP BY salary");
+
+            pstmt.setInt(1, supervisorID);
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            int salary = results.getInt(1);
+            int times = results.getInt(2);
+            results.close();
+            //TODO: change this!!!!
+            return salary * times;
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return -1;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ArrayList<Integer> supervisorOverseeStudent() {
         return new ArrayList<Integer>();
     }
 
+    public static ArrayList<Integer> result_to_arraylist(ResultSet results) throws SQLException{
+        ArrayList <Integer> ret =  new ArrayList<Integer>();
+
+        while(results.next()){
+            ret.add(results.getInt(1));
+        }
+        results.close();
+        return ret;
+    }
+
     public static ArrayList<Integer> testsThisSemester(Integer semester) {
-        return new ArrayList<Integer>();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT id FROM Test " +
+                    "WHERE semester = ? ORDER BY id DESC LIMIT 5" );
+
+            pstmt.setInt(1, semester);
+            ResultSet results = pstmt.executeQuery();
+            return result_to_arraylist(results);
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return new ArrayList<Integer>();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static Boolean studentHalfWayThere(Integer studentID) {

@@ -101,6 +101,13 @@ public class Example {
 
 
         r44 = Solution.supervisorOverseeTest(5, 1, 1); //ok
+
+        int wage = Solution.getWage(5); //16
+        int wage2 = Solution.getWage(11); //-1
+        ArrayList <Integer>  a = Solution.testsThisSemester(1); //ok
+
+        a = Solution.testsThisSemester(11); //empty arraylist
+
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();
