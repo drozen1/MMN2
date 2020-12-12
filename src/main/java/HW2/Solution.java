@@ -1273,7 +1273,7 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("SELECT COUNT(testid) * salary AS wage FROM Supervisor_and_oversees " +
-                    "WHERE supervisorid = ?" +
+                    "WHERE supervisorid = ? " +
                     "GROUP BY salary");
 
             pstmt.setInt(1, supervisorID);
