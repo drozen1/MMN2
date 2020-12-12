@@ -5,8 +5,6 @@ import HW2.data.DBConnector;
 
 import java.sql.*;
 
-import HW2.data.PostgreSQLErrorCodes;
-
 import java.util.ArrayList;
 
 import static HW2.business.ReturnValue.*;
@@ -15,29 +13,28 @@ import static HW2.business.ReturnValue.*;
 public class Solution {
     public static void createTables() {
         InitialState.createInitialState();
-
         //create your tables here
-        Connection connection = DBConnector.getConnection();
-        PreparedStatement pstmt = null;
         create_test_table();
         create_student_table();
         create_supervisor_table();
         create_takes_table();
         create_oversees_table();
-        create_sao();
+        create_supervisor_and_oversees();
+        create_oversees_and_takes();
+        create_student_and_creditpoints();
+        create_takes_and_students();
+        create_takes_and_tests();
     }
 
-    private static void create_sao() {
 
+    private static void create_takes_and_tests() {
 
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //OVERSEES
-            pstmt = connection.prepareStatement("CREATE VIEW SAO as\n" +
-                    "SELECT S.salary, S.id\n" +
-                    "FROM Supervisor S, Oversees O\n" +
-                    "WHERE (S.id=O.supervisorid);" );
+            pstmt = connection.prepareStatement("CREATE VIEW Takes_and_tests as\n" +
+                    "SELECT B.id AS testid, B.semester, B.time,B.room,B.day, B.credit_points, A.studentid \n" +
+                    "FROM Takes AS A INNER JOIN Test AS B ON A.testid = B.id AND A.semester = B.semester");
 
             pstmt.execute();
 
@@ -56,12 +53,115 @@ public class Solution {
         return;
     }
 
+    private static void create_takes_and_students() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Takes_and_students as\n" +
+                    "SELECT S.id AS studentid, S.faculty, S.student_name, S.credit_points, T.semester, T.testid \n" +
+                    "FROM Takes AS T INNER JOIN Student AS S ON T.studentid = S.id");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
+    private static void create_supervisor_and_oversees() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Supervisor_and_oversees as\n" +
+                    "SELECT S.supervisorid, S.salary, S.supervisor_name, O.testid, O.semester \n" +
+                    "FROM Supervisor AS S INNER JOIN Oversees AS O ON S.supervisorid = O.supervisorid");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
+    private static void create_oversees_and_takes() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Oversees_and_takes as\n" +
+                    "SELECT O.supervisorid, O.testid, O.semester, T.studentid \n" +
+                    "FROM Oversees AS O INNER JOIN Takes AS T ON O.testid = T.testid AND O.semester=T.semester");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
+    private static void create_student_and_creditpoints() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Student_and_creditpoints as\n" +
+                    "SELECT S.id AS studentid, S.student_name, S.faculty, S.credit_points AS actualcreditpoints, C.Points AS totalcreditpoints\n" +
+                    "FROM Student AS S INNER JOIN CreditPoints AS C ON S.faculty = C.faculty ");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
 
     public static void create_test_table() {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("CREATE TABLE test\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS test\n" +
                     "(\n" +
                     "    id integer,\n" +
                     "    semester integer,\n" +
@@ -101,7 +201,7 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("CREATE TABLE Student\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Student\n" +
                     "(\n" +
                     "    id integer NOT NULL,\n" +
                     "    student_name text NOT NULL,\n" +
@@ -131,13 +231,13 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("CREATE TABLE Supervisor\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Supervisor\n" +
                     "(\n" +
-                    "    id integer NOT NULL,\n" +
+                    "    supervisorid integer NOT NULL,\n" +
                     "    supervisor_name text NOT NULL,\n" +
                     "    salary integer NOT NULL,\n" +
-                    "    PRIMARY KEY (id),\n" +
-                    "    CHECK (id > 0),\n" +
+                    "    PRIMARY KEY (supervisorid),\n" +
+                    "    CHECK (supervisorid > 0),\n" +
                     "    CHECK (salary >= 0)\n" +
                     ")");
             pstmt.execute();
@@ -160,7 +260,7 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("CREATE TABLE takes\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS takes\n" +
                     "(\n" +
                     "    testid integer NOT NULL,\n" +
                     "    studentid integer NOT NULL,\n" +
@@ -197,15 +297,14 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            //OVERSEES
-            pstmt = connection.prepareStatement("CREATE TABLE Oversees\n" +
+            pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Oversees\n" +
             "(\n" +
                     "    testid integer NOT NULL,\n" +
                     "    supervisorid integer NOT NULL,\n" +
                     "    semester integer NOT NULL,\n" +
                     "    PRIMARY KEY (supervisorid, testid, semester),\n" + //CHANGE
                     "    FOREIGN KEY (supervisorid) \n" +
-                    "    REFERENCES Supervisor(id)\n" +
+                    "    REFERENCES Supervisor(supervisorid)\n" +
                     "    ON DELETE CASCADE, \n"+
                     "    FOREIGN KEY (testid, semester) \n" +
                     "    REFERENCES Test(id,semester)\n" +
@@ -359,25 +458,128 @@ public class Solution {
     }
 
     public static void dropTables() {
-        InitialState.dropInitialState();
+
         //drop your tables here
-        dropsao();  /// drop view od oversees+ supervisors
+        drop_supervisor_and_oversees();  /// drop view od oversees+ supervisors
+        drop_oversees_and_takes();
+        drop_student_and_creditpoints();
+        drop_takes_and_students();
+        drop_takes_and_tests();
+
+        InitialState.dropInitialState();
         dropTablesTakes();
         dropTablesOversees();
         dropTablesTest();
         dropTablesStudent();
         dropTablesSupervisor();
+
     }
 
-    private static void dropsao() {
-        InitialState.dropInitialState();
-        //drop your tables here
+    private static void drop_takes_and_students() {
 
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("DROP VIEW SAO");
+            pstmt = connection.prepareStatement("DROP VIEW Takes_and_students");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    private static void drop_takes_and_tests() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Takes_and_tests");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    private static void drop_student_and_creditpoints() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Student_and_creditpoints");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    private static void drop_oversees_and_takes() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Oversees_and_takes");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    private static void drop_supervisor_and_oversees() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Supervisor_and_oversees");
             pstmt.execute();
 
         } catch (SQLException e) {
@@ -398,10 +600,7 @@ public class Solution {
     }
 
     public static void dropTablesTest() {
-        InitialState.dropInitialState();
-        //drop your tables here
 
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
@@ -426,10 +625,6 @@ public class Solution {
     }
 
     public static void dropTablesStudent() {
-        InitialState.dropInitialState();
-        //drop your tables here
-
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
@@ -454,10 +649,6 @@ public class Solution {
     }
 
     public static void dropTablesSupervisor() {
-        InitialState.dropInitialState();
-        //drop your tables here
-
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
@@ -482,10 +673,7 @@ public class Solution {
     }
 
     public static void dropTablesTakes() {
-        InitialState.dropInitialState();
-        //drop your tables here
 
-        //TEST
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
@@ -510,8 +698,6 @@ public class Solution {
     }
 
     public static void dropTablesOversees() {
-        InitialState.dropInitialState();
-        //drop your tables here
 
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
@@ -776,7 +962,7 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("INSERT INTO Supervisor(id,supervisor_name, salary) " +
+            pstmt = connection.prepareStatement("INSERT INTO Supervisor(supervisorid,supervisor_name, salary) " +
                     "VALUES (?, ?, ?);");
             pstmt.setInt(1, supervisor.getId());
             pstmt.setString(2, supervisor.getName());
@@ -814,7 +1000,7 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("SELECT * FROM Supervisor " +
-                    "WHERE id = ?");
+                    "WHERE supervisorid = ?");
             pstmt.setInt(1, supervisorID);
             ResultSet results = pstmt.executeQuery();
             results.next();
@@ -858,7 +1044,7 @@ public class Solution {
         try {
             pstmt = connection.prepareStatement(
                     "DELETE FROM Supervisor " +
-                            "WHERE id = ? ");
+                            "WHERE supervisorid = ? ");
             pstmt.setInt(1, supervisorID);
             res = pstmt.executeUpdate();
 
