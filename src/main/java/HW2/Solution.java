@@ -24,8 +24,37 @@ public class Solution {
         create_student_and_creditpoints();
         create_takes_and_students();
         create_takes_and_tests();
+        create_total_credit_points();
     }
 
+    private static void create_total_credit_points() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW Total_credit_points AS " +
+                            "SELECT id, sum(credit_points) FROM " +
+                    "(((SELECT id, credit_points FROM Student) " +
+                          "UNION " +
+                            "(SELECT studentid, sum(credit_points) FROM Takes_and_tests " +
+                            " GROUP BY studentid))) AS aaa GROUP BY id");;
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
 
     private static void create_takes_and_tests() {
 
@@ -467,6 +496,7 @@ public class Solution {
         drop_oversees_and_takes();
         drop_student_and_creditpoints();
         drop_takes_and_students();
+        drop_total_credit_points();
         drop_takes_and_tests();
 
         InitialState.dropInitialState();
@@ -476,6 +506,31 @@ public class Solution {
         dropTablesStudent();
         dropTablesSupervisor();
 
+    }
+
+    private static void drop_total_credit_points() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW Total_credit_points");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     private static void drop_takes_and_students() {
@@ -1302,15 +1357,17 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("SELECT sum(credit_points) FROM " +
-                    "((SELECT credit_points FROM student WHERE id = ?) " +
-                    "UNION " +
-                    "(SELECT sum(credit_points) " +
-                    "FROM Takes_and_tests " +
-                    "WHERE studentid = ?)) as aaa");
+//            pstmt = connection.prepareStatement("SELECT sum(credit_points) FROM " +
+//                    "((SELECT credit_points FROM student WHERE id = ?) " +
+//                    "UNION " +
+//                    "(SELECT sum(credit_points) " +
+//                    "FROM Takes_and_tests " +
+//                    "WHERE studentid = ?)) as aaa");
+            pstmt = connection.prepareStatement("SELECT sum FROM Total_credit_points " +
+                    "WHERE id = ?");
 
             pstmt.setInt(1, studentID);
-            pstmt.setInt(2, studentID);
+            //pstmt.setInt(2, studentID);
             ResultSet results = pstmt.executeQuery();
             results.next();
             int total_credit_points = results.getInt(1);
@@ -1368,6 +1425,31 @@ public class Solution {
     }
 
     public static ArrayList<Integer> graduateStudents() {
+//        Connection connection = DBConnector.getConnection();
+//        PreparedStatement pstmt = null;
+//        try {
+//            pstmt = connection.prepareStatement("(SELECT id " +
+//                    "FROM Total_credit_points T, CreditPoints C, Student S" +
+//                    "T.id = S.id AND T.sum >= C.Points AND T.faculty = )");
+//
+//            ResultSet results = pstmt.executeQuery();
+//            return result_to_arraylist(results);
+//        } catch (SQLException e) {
+//            //e.printStackTrace()();
+//            return new ArrayList<Integer>();
+//        }
+//        finally {
+//            try {
+//                pstmt.close();
+//            } catch (SQLException e) {
+//                //e.printStackTrace()();
+//            }
+//            try {
+//                connection.close();
+//            } catch (SQLException e) {
+//                //e.printStackTrace()();
+//            }
+//        }
         return new ArrayList<Integer>();
     }
 
