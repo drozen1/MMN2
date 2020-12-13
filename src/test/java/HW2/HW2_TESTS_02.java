@@ -122,7 +122,7 @@ public class HW2_TESTS_02 extends AbstractTest {
         supervisorOverseeTest(3, 1, 2); // 100
         Assert.assertEquals(averageTestCost(), 115.5 / 3.0, TestUtils.eps);
         addTest(TestUtils.createTest(1, 3));
-        Assert.assertEquals(averageTestCost(), 115.5 / 4.0, TestUtils.eps);
+        Assert.assertEquals(averageTestCost(), 115.5 / 4.0, TestUtils.eps);  //// FAIL
         supervisorStopsOverseeTest(3, 1, 2);
         Assert.assertEquals(averageTestCost(), 15.5 / 4.0, TestUtils.eps);
         // return 0 in case of 0 div

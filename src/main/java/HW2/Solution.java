@@ -25,6 +25,7 @@ public class Solution {
         create_takes_and_students();
         create_takes_and_tests();
         create_total_credit_points();
+        create_supervisor_oversees_test_view();
     }
 
     private static void create_total_credit_points() {
@@ -33,11 +34,11 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("CREATE VIEW Total_credit_points AS " +
-                            "SELECT id, sum(credit_points) FROM " +
+                    "SELECT id, sum(credit_points) FROM " +
                     "(((SELECT id, credit_points FROM Student) " +
-                          "UNION " +
-                            "(SELECT studentid, sum(credit_points) FROM Takes_and_tests " +
-                            " GROUP BY studentid))) AS aaa GROUP BY id");;
+                    "UNION " +
+                    "(SELECT studentid, sum(credit_points) FROM Takes_and_tests " +
+                    " GROUP BY studentid))) AS aaa GROUP BY id");;
 
             pstmt.execute();
 
@@ -82,6 +83,33 @@ public class Solution {
         return;
     }
 
+
+    private static void create_supervisor_oversees_test_view() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW supervisor_oversees_test as\n" +
+                    "SELECT B.salary , C.semester, C.id \n" +
+                    "FROM Supervisor_and_oversees AS B RIGHT OUTER JOIN Test AS C ON B.testid = C.id AND B.semester = C.semester");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
     private static void create_takes_and_students() {
 
         Connection connection = DBConnector.getConnection();
@@ -108,7 +136,7 @@ public class Solution {
         return;
     }
 
-        private static void create_supervisor_and_oversees() {
+    private static void create_supervisor_and_oversees() {
 
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
@@ -330,7 +358,7 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Oversees\n" +
-            "(\n" +
+                    "(\n" +
                     "    testid integer NOT NULL,\n" +
                     "    supervisorid integer NOT NULL,\n" +
                     "    semester integer NOT NULL,\n" +
@@ -492,18 +520,18 @@ public class Solution {
     public static void dropTables() {
 
         //drop your tables here
+        drop_supervisor_and_oversees_and_tests();
         drop_supervisor_and_oversees();  /// drop view od oversees+ supervisors
         drop_oversees_and_takes();
         drop_student_and_creditpoints();
         drop_takes_and_students();
         drop_total_credit_points();
         drop_takes_and_tests();
-
-        InitialState.dropInitialState();
         dropTablesTakes();
         dropTablesOversees();
         dropTablesTest();
         dropTablesStudent();
+        InitialState.dropInitialState();
         dropTablesSupervisor();
 
     }
@@ -634,6 +662,29 @@ public class Solution {
         }
     }
 
+    private static void drop_supervisor_and_oversees_and_tests() {
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW supervisor_oversees_test");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
     private static void drop_supervisor_and_oversees() {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
@@ -1272,7 +1323,34 @@ public class Solution {
     }
 
     public static Float averageTestCost() {
-        return 0.0f;
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT AVG(avg_group) " +
+                    "FROM (SELECT AVG(COALESCE(salary, 0)) as avg_group " +
+                    "FROM supervisor_oversees_test " +
+                    "GROUP BY semester, id) as x");
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            Float avg = results.getFloat(1);
+            results.close();
+            return avg;
+        } catch (SQLException e) {
+           // e.printStackTrace();
+            return 0.0f;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static Integer getWage(Integer supervisorID) {

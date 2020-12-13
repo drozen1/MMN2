@@ -111,6 +111,27 @@ public class Example {
         int k = Solution.studentCreditPoints(345088199);  //8
         int kk = Solution.studentCreditPoints(459); //0
 
+        su.setSalary(10);
+        su.setName("nochi");
+        su.setId(123);
+        r2 = Solution.addSupervisor(su); //ok
+
+        su.setSalary(100);
+        su.setName("dor");
+        su.setId(1007);
+        r2 = Solution.addSupervisor(su); //ok
+        r33 = Solution.supervisorOverseeTest(123, 1, 1); //ok
+        r33 = Solution.supervisorOverseeTest(123, 2, 1); //ok
+        r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
+        Float f = Solution.averageTestCost();
+        t.setId(3);
+        t.setSemester(2);
+        r= Solution.addTest(t);
+        f =Solution.averageTestCost();
+        t.setId(4);
+        t.setSemester(2);
+        r= Solution.addTest(t);
+        f =Solution.averageTestCost();
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();
