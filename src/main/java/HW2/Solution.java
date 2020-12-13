@@ -1459,7 +1459,7 @@ public class Solution {
         try {
             pstmt = connection.prepareStatement("SELECT studentid " +
                     "FROM public.student_and_creditpoints "+
-                    "WHERE studentid = ? AND actualcreditpoints*2>totalcreditpoints ");
+                    "WHERE studentid = ? AND actualcreditpoints*2>=totalcreditpoints ");
 
             pstmt.setInt(1, studentID);
             //pstmt.setInt(2, studentID);
@@ -1525,7 +1525,38 @@ public class Solution {
     }
 
     public static Integer getMostPopularTest(String faculty) {
-        return 0;
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT testid FROM " +
+                    "(SELECT testid, count(*) as count "+
+                    "FROM public.takes_and_students "+
+                    "WHERE takes_and_students.faculty = ? "+
+                    "GROUP BY testid "+
+                    "ORDER BY count DESC, testid DESC) as a ");
+
+            pstmt.setString(1, faculty);
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            int total_credit_points = results.getInt(1);
+            results.close();
+            return total_credit_points;
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return 0;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ArrayList<Integer> getConflictingTests() {

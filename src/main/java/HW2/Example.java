@@ -41,10 +41,12 @@ public class Example {
         r = Solution.deleteTest(1,3);   //not exists
         r = Solution.deleteTest(12,1); //not exists
         Student s1 = new Student();
-        s1.setFaculty("EE");
+        s1.setFaculty("CS");
         s1.setName("yoni");
         s1.setId(555);
         s1.setCreditPoints(90);
+        ReturnValue r88 = Solution.studentAttendTest(555, 1, 1); //ok
+        r88 = Solution.studentAttendTest(555, 2, 1); //ok
 
         Student s = new Student();
         s.setFaculty("CS");
@@ -94,7 +96,7 @@ public class Example {
         ReturnValue r55 = Solution.supervisorOverseeTest(5, 1, 1); //alredy exists
         ReturnValue r66 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
         ReturnValue r77 = Solution.supervisorOverseeTest(5, 21, 1); //doesnt exists
-        ReturnValue r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
+        r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
 
         ReturnValue r333 = Solution.studentWaiveTest(345088199, 1, 1); //ok
         ReturnValue r444 = Solution.studentWaiveTest(345088199, 1, 1); //doesnt exists
@@ -106,7 +108,7 @@ public class Example {
         ReturnValue s3 = Solution.supervisorStopsOverseeTest(5, 2, 3); //doesnt exists
         ReturnValue s4 = Solution.supervisorStopsOverseeTest(5, 6, 1); //doesnt exists
 
-
+        r88 = Solution.studentAttendTest(555, 2, 1); //ok
         r44 = Solution.supervisorOverseeTest(5, 1, 1); //ok
 
         int wage = Solution.getWage(5); //16
@@ -147,7 +149,8 @@ public class Example {
         r3 = Solution.studentAttendTest(345088199, 2, 1);
         r3 = Solution.studentAttendTest(345088199, 3, 2);
         r3 = Solution.studentAttendTest(345088199, 4, 2);
-
+        int popular_ret_value = Solution.getMostPopularTest("CS");
+        popular_ret_value= Solution.getMostPopularTest("EE");
         boolean check= Solution.studentHalfWayThere(555);  //true
         check= Solution.studentHalfWayThere(345088199);  //karen
 
