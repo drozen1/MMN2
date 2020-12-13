@@ -1339,7 +1339,32 @@ public class Solution {
     }
 
     public static ArrayList<Integer> getConflictingTests() {
-        return new ArrayList<Integer>();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT DISTINCT A.id " +
+                    " FROM Test A, Test B " +
+                    "WHERE A.id != B.id AND A.day = B.day AND A.semester = B.semester AND A.time = B.time " +
+                    "ORDER BY id ASC" );
+
+            ResultSet results = pstmt.executeQuery();
+            return result_to_arraylist(results);
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return new ArrayList<Integer>();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ArrayList<Integer> graduateStudents() {

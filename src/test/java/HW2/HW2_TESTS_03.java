@@ -540,7 +540,6 @@ public class HW2_TESTS_03 extends AbstractTest {
         assertEquals(Boolean.FALSE, Solution.studentHalfWayThere(3));
     }
 
-    //TODO: CHECK
     @org.junit.Test
     public void conflictingTests() {
 

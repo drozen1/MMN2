@@ -428,7 +428,6 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(0, res.intValue());
     }
 
-    //TODO: check
     @org.junit.Test
     public void getConflictingTests() {
         ArrayList<Integer> res;
