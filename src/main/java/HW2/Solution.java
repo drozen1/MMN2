@@ -23,7 +23,6 @@ public class Solution {
         create_oversees_and_takes();
         create_student_and_creditpoints();
         create_takes_and_students();
-        create_takes_and_students_and_tests();
         create_takes_and_tests();
     }
 
@@ -80,33 +79,7 @@ public class Solution {
         return;
     }
 
-    private static void create_takes_and_students_and_tests() {
-
-        Connection connection = DBConnector.getConnection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement("CREATE VIEW Takes_and_students_and_tests as\n" +
-                    "SELECT A.studentid, A.faculty, A.student_name, A.credit_points AS student_credit_points, A.semester, A.testid , B.credit_points \n" +
-                    "FROM Takes_and_students AS A INNER JOIN Test AS B ON A.testid = B.id AND A.semester = B.semester");
-
-            pstmt.execute();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (pstmt != null)
-                    pstmt.close();
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return;
-    }
-
-    private static void create_supervisor_and_oversees() {
+        private static void create_supervisor_and_oversees() {
 
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
@@ -235,6 +208,9 @@ public class Solution {
                     "    faculty text NOT NULL,\n" +
                     "    credit_points integer NOT NULL,\n" +
                     "    PRIMARY KEY (id),\n" +
+                    "    FOREIGN KEY (faculty) \n" +
+                    "    REFERENCES CreditPoints(Faculty)\n" +
+                    "    ON DELETE CASCADE, \n"+
                     "    CHECK (id > 0),\n" +
                     "    CHECK (credit_points >= 0)\n" +
                     ")");
@@ -490,7 +466,6 @@ public class Solution {
         drop_supervisor_and_oversees();  /// drop view od oversees+ supervisors
         drop_oversees_and_takes();
         drop_student_and_creditpoints();
-        drop_takes_and_students_and_test();
         drop_takes_and_students();
         drop_takes_and_tests();
 
@@ -528,30 +503,6 @@ public class Solution {
         }
     }
 
-    private static void drop_takes_and_students_and_test() {
-
-        Connection connection = DBConnector.getConnection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement("DROP VIEW Takes_and_students_and_tests");
-            pstmt.execute();
-
-        } catch (SQLException e) {
-            //e.printStackTrace()();
-        }
-        finally {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                //e.printStackTrace()();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                //e.printStackTrace()();
-            }
-        }
-    }
 
     private static void drop_takes_and_tests() {
 
@@ -913,7 +864,8 @@ public class Solution {
         } catch (SQLException e) {
             //e.printStackTrace()();
             if(Integer.valueOf(e.getSQLState()) == 23514 || //CHECK_VIOLIATION (23514)
-                    Integer.valueOf(e.getSQLState()) ==23502) {//NOT_NULL_VIOLATION (23502),
+                    Integer.valueOf(e.getSQLState()) ==23502 || //NOT_NULL_VIOLATION (23502)
+                    Integer.valueOf(e.getSQLState()) == 23503 ) { //FOREIGN_KEY_VIOLATION(23503)
                 return BAD_PARAMS;
             }
             if(Integer.valueOf(e.getSQLState()) == 23505) { //UNIQUE_VIOLATION(23505),
@@ -1350,12 +1302,15 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("SELECT SUM(credit_points) + student_credit_points AS total_credit_points " +
-                    "FROM Takes_and_students_and_tests " +
-                    "WHERE studentid = ? "+
-                    "GROUP BY student_credit_points");
+            pstmt = connection.prepareStatement("SELECT sum(credit_points) FROM " +
+                    "((SELECT credit_points FROM student WHERE id = ?) " +
+                    "UNION " +
+                    "(SELECT sum(credit_points) " +
+                    "FROM Takes_and_tests " +
+                    "WHERE studentid = ?)) as aaa");
 
             pstmt.setInt(1, studentID);
+            pstmt.setInt(2, studentID);
             ResultSet results = pstmt.executeQuery();
             results.next();
             int total_credit_points = results.getInt(1);

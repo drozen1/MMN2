@@ -420,6 +420,7 @@ public class HW2_TESTS_03 extends AbstractTest {
 
     }
 
+    //TODO: CHECK
     @org.junit.Test
     public void averageTestCostTest() {
 
@@ -456,6 +457,7 @@ public class HW2_TESTS_03 extends AbstractTest {
 
     }
 
+    //TODO: CHECK
     @org.junit.Test
     public void supervisorOverseeStudentTest() {
 
@@ -518,6 +520,7 @@ public class HW2_TESTS_03 extends AbstractTest {
         assertEquals(Integer.valueOf(5), Solution.studentCreditPoints(1));
     }
 
+    //TODO: CHECK
     @org.junit.Test
     public void halfwayTest() {
 
@@ -537,6 +540,7 @@ public class HW2_TESTS_03 extends AbstractTest {
         assertEquals(Boolean.FALSE, Solution.studentHalfWayThere(3));
     }
 
+    //TODO: CHECK
     @org.junit.Test
     public void conflictingTests() {
 
@@ -563,7 +567,7 @@ public class HW2_TESTS_03 extends AbstractTest {
 
     }
 
-
+    //TODO: CHECK
     @org.junit.Test
     public void getMostPopular() {
 
@@ -592,6 +596,7 @@ public class HW2_TESTS_03 extends AbstractTest {
 
     }
 
+    //TODO: CHECK
     @org.junit.Test
     public void graduateStudentsTest() {
 
