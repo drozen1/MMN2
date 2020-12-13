@@ -1386,7 +1386,33 @@ public class Solution {
     }
 
     public static ArrayList<Integer> supervisorOverseeStudent() {
-        return new ArrayList<Integer>();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT DISTINCT studentid " +
+                    "FROM public.oversees_and_takes "+
+                    "GROUP BY supervisorid,studentid "+
+                    "HAVING COUNT(*)>1 "+
+                    "ORDER BY studentid DESC; ");
+
+            ResultSet results = pstmt.executeQuery();
+            return result_to_arraylist(results);
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return new ArrayList<Integer>();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ArrayList<Integer> result_to_arraylist(ResultSet results) throws SQLException{

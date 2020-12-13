@@ -59,6 +59,7 @@ public class Example {
         r2= Solution.addStudent(s); //bad params
 
         ReturnValue r3 = Solution.studentAttendTest(345088199, 1, 1); //ok
+
         ReturnValue r4 = Solution.studentAttendTest(345088199, 1, 1); //alredy exists
         ReturnValue r5 = Solution.studentAttendTest(345088199, 2, 1); //ok
         ReturnValue r6 = Solution.studentAttendTest(0, 2, 1); //doesnt exists
@@ -122,7 +123,7 @@ public class Example {
         r2 = Solution.addSupervisor(su); //ok
         r33 = Solution.supervisorOverseeTest(123, 1, 1); //ok
         r33 = Solution.supervisorOverseeTest(123, 2, 1); //ok
-        r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
+
         Float f = Solution.averageTestCost();
         t.setId(3);
         t.setSemester(2);
@@ -132,6 +133,14 @@ public class Example {
         t.setSemester(2);
         r= Solution.addTest(t);
         f =Solution.averageTestCost();
+        r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
+        r33 = Solution.supervisorOverseeTest(1007, 4, 2); //ok
+        r33 = Solution.supervisorOverseeTest(1007, 3, 2); //ok
+        r33 = Solution.supervisorOverseeTest(123, 4, 2); //ok
+        r33 = Solution.supervisorOverseeTest(123, 3, 2); //ok
+        r3 = Solution.studentAttendTest(345088199, 2, 1);
+        r3 = Solution.studentAttendTest(345088199, 3, 2);
+        r3 = Solution.studentAttendTest(345088199, 4, 2);
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();
