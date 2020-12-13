@@ -40,14 +40,20 @@ public class Example {
         r = Solution.deleteTest(12,3); //not exists
         r = Solution.deleteTest(1,3);   //not exists
         r = Solution.deleteTest(12,1); //not exists
+        Student s1 = new Student();
+        s1.setFaculty("EE");
+        s1.setName("yoni");
+        s1.setId(555);
+        s1.setCreditPoints(90);
 
         Student s = new Student();
         s.setFaculty("CS");
         s.setName("karen");
         s.setId(345088199);
-        s.setCreditPoints(0);
+        s.setCreditPoints(30);
 
         ReturnValue r2= Solution.addStudent(s); //ok
+        r2= Solution.addStudent(s1);
         r2= Solution.addStudent(s); //alredy exists
         r2 = Solution.deleteStudent(0); //doesnt exists
 
@@ -141,6 +147,10 @@ public class Example {
         r3 = Solution.studentAttendTest(345088199, 2, 1);
         r3 = Solution.studentAttendTest(345088199, 3, 2);
         r3 = Solution.studentAttendTest(345088199, 4, 2);
+
+        boolean check= Solution.studentHalfWayThere(555);  //true
+        check= Solution.studentHalfWayThere(345088199);  //karen
+
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");
 //        insertIntoTable();

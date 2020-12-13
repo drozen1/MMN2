@@ -1454,7 +1454,36 @@ public class Solution {
     }
 
     public static Boolean studentHalfWayThere(Integer studentID) {
-        return true;
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT studentid " +
+                    "FROM public.student_and_creditpoints "+
+                    "WHERE studentid = ? AND actualcreditpoints*2>totalcreditpoints ");
+
+            pstmt.setInt(1, studentID);
+            //pstmt.setInt(2, studentID);
+            ResultSet results = pstmt.executeQuery();
+
+            ArrayList<Integer> check_if_empty = result_to_arraylist(results);
+            boolean ret = check_if_empty.isEmpty();
+            return !ret;
+        } catch (SQLException e) {
+            //e.printStackTrace();
+            return false;
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static Integer studentCreditPoints(Integer studentID) {
