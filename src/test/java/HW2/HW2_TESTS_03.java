@@ -595,7 +595,6 @@ public class HW2_TESTS_03 extends AbstractTest {
 
     }
 
-    //TODO: CHECK
     @org.junit.Test
     public void graduateStudentsTest() {
 

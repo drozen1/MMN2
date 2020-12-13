@@ -1425,32 +1425,32 @@ public class Solution {
     }
 
     public static ArrayList<Integer> graduateStudents() {
-//        Connection connection = DBConnector.getConnection();
-//        PreparedStatement pstmt = null;
-//        try {
-//            pstmt = connection.prepareStatement("(SELECT id " +
-//                    "FROM Total_credit_points T, CreditPoints C, Student S" +
-//                    "T.id = S.id AND T.sum >= C.Points AND T.faculty = )");
-//
-//            ResultSet results = pstmt.executeQuery();
-//            return result_to_arraylist(results);
-//        } catch (SQLException e) {
-//            //e.printStackTrace()();
-//            return new ArrayList<Integer>();
-//        }
-//        finally {
-//            try {
-//                pstmt.close();
-//            } catch (SQLException e) {
-//                //e.printStackTrace()();
-//            }
-//            try {
-//                connection.close();
-//            } catch (SQLException e) {
-//                //e.printStackTrace()();
-//            }
-//        }
-        return new ArrayList<Integer>();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("(SELECT Distinct T.id " +
+                    "FROM Total_credit_points T, CreditPoints C, Student S " +
+                    "WHERE T.id = S.id AND T.sum >= C.Points AND S.faculty = C.Faculty " +
+                    "ORDER BY id ASC LIMIT 5)");
+
+            ResultSet results = pstmt.executeQuery();
+            return result_to_arraylist(results);
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return new ArrayList<Integer>();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
     }
 
     public static ArrayList<Integer> getCloseStudents(Integer studentID) {

@@ -469,7 +469,6 @@ public class HW2_TESTS_04 extends AbstractTest {
 
     }
 
-    //TODO: check
     @org.junit.Test
     public void graduateStudentsA() {
         ArrayList<Integer> res;
@@ -508,7 +507,7 @@ public class HW2_TESTS_04 extends AbstractTest {
 
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void graduateStudentsB() {
         ArrayList<Integer> res;
@@ -566,7 +565,6 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(0, res.size());
     }
 
-    //TODO: check
     @org.junit.Test
     public void graduateStudentsD() {
         ArrayList<Integer> res;
