@@ -39,7 +39,6 @@ public class HW2_TESTS_01 extends AbstractTest {
         assertEquals(ReturnValue.NOT_EXISTS, res);
     }
 
-    //TODO: check
     @org.junit.Test
     public void studentGraduateTest() {
 

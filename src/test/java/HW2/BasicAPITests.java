@@ -39,7 +39,7 @@ public class BasicAPITests extends AbstractTest {
         assertEquals(ReturnValue.NOT_EXISTS, res);
     }
 
-    //TODO: CHECK
+
     @org.junit.Test
     public void studentGraduateTest() {
 

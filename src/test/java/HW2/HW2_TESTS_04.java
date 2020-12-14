@@ -175,7 +175,7 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(ReturnValue.OK, ret);
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void averageTestCost() {
         Float res;
@@ -211,14 +211,14 @@ public class HW2_TESTS_04 extends AbstractTest {
         res = Solution.getWage(SUPERVISOR1.getId());
         assertEquals(200, res.intValue());
 
-        res = Solution.getWage(SUPERVISOR2.getId()); ////TODO: same bug
+        res = Solution.getWage(SUPERVISOR2.getId());
         assertEquals(0, res.intValue());
 
         res = Solution.getWage(100);
         assertEquals(-1, res.intValue());
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void supervisorOverseeStudentReturnsOneStudent() {
         ArrayList<Integer> res;
@@ -259,7 +259,7 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(0, res.size());
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void supervisorOverseeStudentReturnsTwoStudentsA() {
         ArrayList<Integer> res;
@@ -284,7 +284,7 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(1, res.get(1).intValue());
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void supervisorOverseeStudentReturnsTwoStudentsB() {
         ArrayList<Integer> res;
@@ -348,7 +348,7 @@ public class HW2_TESTS_04 extends AbstractTest {
         assertEquals(5, res.get(4).intValue());
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void studentHalfWayThere() {
         Boolean res;
@@ -397,7 +397,7 @@ public class HW2_TESTS_04 extends AbstractTest {
 
     }
 
-    //TODO: check
+
     @org.junit.Test
     public void getMostPopularTest() {
         Integer res;

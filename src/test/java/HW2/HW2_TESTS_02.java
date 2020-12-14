@@ -111,7 +111,7 @@ public class HW2_TESTS_02 extends AbstractTest {
         assertEquals(supervisorStopsOverseeTest(1, 1, 2), OK);
     }
 
-    //TODO: CHECK
+
     @Test
     public void testAverageTestCost() {
         // return a normal average
@@ -143,7 +143,7 @@ public class HW2_TESTS_02 extends AbstractTest {
     @Test
     public void testGetWage() {
         // get the supervisors wages
-        assertEquals(getWage(1).intValue(), 0);   //TODO: BUG
+        assertEquals(getWage(1).intValue(), 0);
         supervisorOverseeTest(1, 1, 1);
         assertEquals(getWage(1).intValue(), 1);
         supervisorOverseeTest(1, 1, 2);
@@ -157,7 +157,6 @@ public class HW2_TESTS_02 extends AbstractTest {
         assertEquals(getWage(4).intValue(), -1);
     }
 
-    //TODO: CHECK
     @Test
     public void testSupervisorOverseeStudent() {
         // returns all the students that have an observer that oversee the student more then once
@@ -219,7 +218,7 @@ public class HW2_TESTS_02 extends AbstractTest {
         assertEquals("[20, 19, 18, 17, 16]", testsThisSemester(2).toString());
     }
 
-    //TODO: CHECK
+
     @Test
     public void testStudentHalfWayThere() {
         // if a student has >= half of the required credits
@@ -264,7 +263,7 @@ public class HW2_TESTS_02 extends AbstractTest {
         assertTrue(studentHalfWayThere(4));
     }
 
-    //TODO: CHECK halfway function, the other works
+
     @Test
     public void testStudentCreditPoints() {
         // return the number of credit points that a student has(adding all the tests)
@@ -311,7 +310,7 @@ public class HW2_TESTS_02 extends AbstractTest {
         assertEquals(0, studentCreditPoints(20).intValue());
     }
 
-    //TODO: CHECK
+
     @Test
     public void testGetMostPopularTest() {
         // tests id of the most popular in the given faculty, across all semesters

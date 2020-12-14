@@ -1357,8 +1357,9 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("SELECT COUNT(testid) * salary AS wage FROM Supervisor_and_oversees " +
-                    "WHERE supervisorid = ? " +
+            pstmt = connection.prepareStatement("SELECT COUNT(testid) * salary AS wage " +
+                    "FROM Supervisor AS B LEFT OUTER JOIN Oversees AS C ON B.supervisorid = C.supervisorid  " +
+                    "WHERE B.supervisorid = ? " +
                     "GROUP BY salary");
 
             pstmt.setInt(1, supervisorID);
