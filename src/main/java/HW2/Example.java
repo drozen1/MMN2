@@ -19,7 +19,7 @@ public class Example {
 
         Solution.dropTables();
         Solution.createTables();
-
+        Float f = Solution.averageTestCost();
         Test t = new Test();
         t.setId(1);
         t.setSemester(1);
@@ -30,7 +30,7 @@ public class Example {
 
         ReturnValue r= Solution.addTest(t); //OK
         r= Solution.addTest(t); //alredy exists
-
+        f = Solution.averageTestCost();
         t.setId(2);
         r= Solution.addTest(t); //OK
 
@@ -45,17 +45,32 @@ public class Example {
         s1.setName("yoni");
         s1.setId(555);
         s1.setCreditPoints(90);
+        ReturnValue r2= Solution.addStudent(s1);
+        s1.setId(111);
+        s1.setName("yossi");
+        s1.setCreditPoints(10);
+        r2= Solution.addStudent(s1);
         ReturnValue r88 = Solution.studentAttendTest(555, 1, 1); //ok
         r88 = Solution.studentAttendTest(555, 2, 1); //ok
+
+        s1.setFaculty("EE");
+        s1.setName("dor");
+        s1.setId(222);
+        s1.setCreditPoints(75);
+        r2= Solution.addStudent(s1);
+        r88 = Solution.studentAttendTest(222, 1, 1); //ok
+        r88 = Solution.studentAttendTest(222, 1, 1); //ok
+        r88 = Solution.studentAttendTest(222, 2, 1); //ok
+
 
         Student s = new Student();
         s.setFaculty("CS");
         s.setName("karen");
-        s.setId(345088199);
+        s.setId(345);
         s.setCreditPoints(30);
 
-        ReturnValue r2= Solution.addStudent(s); //ok
-        r2= Solution.addStudent(s1);
+        r2= Solution.addStudent(s); //ok
+
         r2= Solution.addStudent(s); //alredy exists
         r2 = Solution.deleteStudent(0); //doesnt exists
 
@@ -66,14 +81,14 @@ public class Example {
         s.setName(null);
         r2= Solution.addStudent(s); //bad params
 
-        ReturnValue r3 = Solution.studentAttendTest(345088199, 1, 1); //ok
+        ReturnValue r3 = Solution.studentAttendTest(345, 1, 1); //ok
 
-        ReturnValue r4 = Solution.studentAttendTest(345088199, 1, 1); //alredy exists
-        ReturnValue r5 = Solution.studentAttendTest(345088199, 2, 1); //ok
+        ReturnValue r4 = Solution.studentAttendTest(345, 1, 1); //alredy exists
+        ReturnValue r5 = Solution.studentAttendTest(345, 2, 1); //ok
         ReturnValue r6 = Solution.studentAttendTest(0, 2, 1); //doesnt exists
-        ReturnValue r7 = Solution.studentAttendTest(345088199, 21, 1); //doesnt exists
-        ReturnValue r8 = Solution.studentAttendTest(345088199, 1, 3); //doesnt exists
-        ReturnValue r9 = Solution.studentAttendTest(345088199, 1, 6); //doesnt exists
+        ReturnValue r7 = Solution.studentAttendTest(345, 21, 1); //doesnt exists
+        ReturnValue r8 = Solution.studentAttendTest(345, 1, 3); //doesnt exists
+        ReturnValue r9 = Solution.studentAttendTest(345, 1, 6); //doesnt exists
 
         Supervisor su = new Supervisor();
         su.setId(5);
@@ -98,9 +113,9 @@ public class Example {
         ReturnValue r77 = Solution.supervisorOverseeTest(5, 21, 1); //doesnt exists
         r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
 
-        ReturnValue r333 = Solution.studentWaiveTest(345088199, 1, 1); //ok
-        ReturnValue r444 = Solution.studentWaiveTest(345088199, 1, 1); //doesnt exists
-        ReturnValue r555 = Solution.supervisorOverseeTest(345088199, 2, 2); //doesnt exists
+        ReturnValue r333 = Solution.studentWaiveTest(345, 1, 1); //ok
+        ReturnValue r444 = Solution.studentWaiveTest(345, 1, 1); //doesnt exists
+        ReturnValue r555 = Solution.supervisorOverseeTest(345, 2, 2); //doesnt exists
         ReturnValue r666 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
 
         ReturnValue w1 = Solution.supervisorStopsOverseeTest(5, 1, 1); //ok
@@ -117,7 +132,7 @@ public class Example {
 
         a = Solution.testsThisSemester(11); //empty arraylist
 
-        int k = Solution.studentCreditPoints(345088199);  //8
+        int k = Solution.studentCreditPoints(345);  //8
         int kk = Solution.studentCreditPoints(459); //0
 
         su.setSalary(10);
@@ -132,7 +147,7 @@ public class Example {
         r33 = Solution.supervisorOverseeTest(123, 1, 1); //ok
         r33 = Solution.supervisorOverseeTest(123, 2, 1); //ok
 
-        Float f = Solution.averageTestCost();
+       f = Solution.averageTestCost();
         t.setId(3);
         t.setSemester(2);
         r= Solution.addTest(t);
@@ -144,15 +159,16 @@ public class Example {
         r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
         r33 = Solution.supervisorOverseeTest(1007, 4, 2); //ok
         r33 = Solution.supervisorOverseeTest(1007, 3, 2); //ok
+        r88 = Solution.studentAttendTest(222, 3, 2); //ok
         r33 = Solution.supervisorOverseeTest(123, 4, 2); //ok
         r33 = Solution.supervisorOverseeTest(123, 3, 2); //ok
-        r3 = Solution.studentAttendTest(345088199, 2, 1);
-        r3 = Solution.studentAttendTest(345088199, 3, 2);
-        r3 = Solution.studentAttendTest(345088199, 4, 2);
+        r3 = Solution.studentAttendTest(345, 2, 1);
+        r3 = Solution.studentAttendTest(345, 3, 2);
+        r3 = Solution.studentAttendTest(345, 4, 2);
         int popular_ret_value = Solution.getMostPopularTest("CS");
         popular_ret_value= Solution.getMostPopularTest("EE");
         boolean check= Solution.studentHalfWayThere(555);  //true
-        check= Solution.studentHalfWayThere(345088199);  //karen
+        check= Solution.studentHalfWayThere(345);  //karen
 
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");

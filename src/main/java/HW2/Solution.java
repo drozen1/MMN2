@@ -26,6 +26,7 @@ public class Solution {
         create_takes_and_tests();
         create_total_credit_points();
         create_supervisor_oversees_test_view();
+        create_takes_and_students_with_null();
     }
 
     private static void create_total_credit_points() {
@@ -92,6 +93,34 @@ public class Solution {
             pstmt = connection.prepareStatement("CREATE VIEW supervisor_oversees_test as\n" +
                     "SELECT B.salary , C.semester, C.id \n" +
                     "FROM Supervisor_and_oversees AS B RIGHT OUTER JOIN Test AS C ON B.testid = C.id AND B.semester = C.semester");
+
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return;
+    }
+
+
+
+    private static void create_takes_and_students_with_null() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("CREATE VIEW takes_and_students_with_null as\n" +
+                    "SELECT S.id, T.testid,T.semester \n" +
+                    "FROM Student AS S LEFT OUTER JOIN Takes AS T ON S.id = T.studentid");
 
             pstmt.execute();
 
@@ -520,6 +549,7 @@ public class Solution {
     public static void dropTables() {
 
         //drop your tables here
+        dropTablestakes_and_students_with_null();
         drop_supervisor_and_oversees_and_tests();
         drop_supervisor_and_oversees();  /// drop view od oversees+ supervisors
         drop_oversees_and_takes();
@@ -763,6 +793,31 @@ public class Solution {
         PreparedStatement pstmt = null;
         try {
             pstmt = connection.prepareStatement("DROP TABLE IF EXISTS Supervisor");
+            pstmt.execute();
+
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+    }
+
+    public static void dropTablestakes_and_students_with_null() {
+
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("DROP VIEW IF EXISTS takes_and_students_with_null");
             pstmt.execute();
 
         } catch (SQLException e) {
@@ -1619,6 +1674,41 @@ public class Solution {
     }
 
     public static ArrayList<Integer> getCloseStudents(Integer studentID) {
-        return new ArrayList<Integer>();
+        Connection connection = DBConnector.getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement("SELECT id " +
+                    "FROM (SELECT count(testid) as studentstests " +
+                    "FROM takes_and_students_with_null AS T " +
+                    "WHERE T.id=?) AS bb, "+
+                    "(SELECT T2.id, count(T2.testid) as commontests "+
+                    "FROM takes_and_students_with_null AS T1, public.takes_and_students_with_null AS T2 "+
+                    "WHERE (T1.id=? AND (((T1.testid=T2.testid AND T1.semester=T2.semester) OR T2.testid IS NULL) OR T1.testid IS NULL )) "+
+                    "GROUP BY T2.id) AS aa "+
+                    "WHERE aa.commontests*2>=bb.studentstests AND aa.id!=? "+
+                    "ORDER BY id desc LIMIT 10 ");
+            pstmt.setInt(1, studentID);
+            pstmt.setInt(2, studentID);
+            pstmt.setInt(3, studentID);
+            ResultSet results = pstmt.executeQuery();
+            return result_to_arraylist(results);
+        } catch (SQLException e) {
+            //e.printStackTrace()();
+            return new ArrayList<Integer>();
+        }
+        finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                //e.printStackTrace()();
+            }
+        }
+
     }
+
 }
