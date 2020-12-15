@@ -28,147 +28,152 @@ public class Example {
         t.setCreditPoints(8);
         t.setRoom(7);
 
-        ReturnValue r= Solution.addTest(t); //OK
-        r= Solution.addTest(t); //alredy exists
-        f = Solution.averageTestCost();
-        t.setId(2);
-        r= Solution.addTest(t); //OK
+        ReturnValue r= Solution.addTest(t);
 
-        t.setSemester(5);
-        r= Solution.addTest(t); //invalid semester
-
-        r = Solution.deleteTest(12,3); //not exists
-        r = Solution.deleteTest(1,3);   //not exists
-        r = Solution.deleteTest(12,1); //not exists
-        Student s1 = new Student();
-        s1.setFaculty("CS");
-        s1.setName("yoni");
-        s1.setId(555);
-        s1.setCreditPoints(90);
-        ReturnValue r2= Solution.addStudent(s1);
-        s1.setId(111);
-        s1.setName("yossi");
-        s1.setCreditPoints(10);
-        r2= Solution.addStudent(s1);
-        ReturnValue r88 = Solution.studentAttendTest(555, 1, 1); //ok
-        r88 = Solution.studentAttendTest(555, 2, 1); //ok
-
-        s1.setFaculty("EE");
-        s1.setName("dor");
-        s1.setId(222);
-        s1.setCreditPoints(75);
-        r2= Solution.addStudent(s1);
-        r88 = Solution.studentAttendTest(222, 1, 1); //ok
-        r88 = Solution.studentAttendTest(222, 1, 1); //ok
-        r88 = Solution.studentAttendTest(222, 2, 1); //ok
-
-
-        Student s = new Student();
-        s.setFaculty("CS");
-        s.setName("karen");
-        s.setId(345);
-        s.setCreditPoints(30);
-
-        r2= Solution.addStudent(s); //ok
-
-        r2= Solution.addStudent(s); //alredy exists
-        r2 = Solution.deleteStudent(0); //doesnt exists
-
-        s.setId(-1);
-        r2= Solution.addStudent(s); //bad params
-
-        s.setId(345088199);
-        s.setName(null);
-        r2= Solution.addStudent(s); //bad params
-
-        ReturnValue r3 = Solution.studentAttendTest(345, 1, 1); //ok
-
-        ReturnValue r4 = Solution.studentAttendTest(345, 1, 1); //alredy exists
-        ReturnValue r5 = Solution.studentAttendTest(345, 2, 1); //ok
-        ReturnValue r6 = Solution.studentAttendTest(0, 2, 1); //doesnt exists
-        ReturnValue r7 = Solution.studentAttendTest(345, 21, 1); //doesnt exists
-        ReturnValue r8 = Solution.studentAttendTest(345, 1, 3); //doesnt exists
-        ReturnValue r9 = Solution.studentAttendTest(345, 1, 6); //doesnt exists
-
-        Supervisor su = new Supervisor();
-        su.setId(5);
-        su.setSalary(8);
-        su.setName("aa");
-
-        r2 = Solution.addSupervisor(su); //ok
-        su.setId(8);
-        r2 = Solution.addSupervisor(su); //ok
-        r2 = Solution.addSupervisor(su); //alredy exists
-        su.setSalary(-1);
-
-        r2 = Solution.addSupervisor(su); //bad args
-        su.setSalary(8);
-        su.setName(null);
-        r2 = Solution.addSupervisor(su); //bad args
-
-        ReturnValue r33 = Solution.supervisorOverseeTest(5, 1, 1); //ok
-        ReturnValue r44 = Solution.supervisorOverseeTest(5, 2, 1); //ok
-        ReturnValue r55 = Solution.supervisorOverseeTest(5, 1, 1); //alredy exists
-        ReturnValue r66 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
-        ReturnValue r77 = Solution.supervisorOverseeTest(5, 21, 1); //doesnt exists
-        r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
-
-        ReturnValue r333 = Solution.studentWaiveTest(345, 1, 1); //ok
-        ReturnValue r444 = Solution.studentWaiveTest(345, 1, 1); //doesnt exists
-        ReturnValue r555 = Solution.supervisorOverseeTest(345, 2, 2); //doesnt exists
-        ReturnValue r666 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
-
-        ReturnValue w1 = Solution.supervisorStopsOverseeTest(5, 1, 1); //ok
-        ReturnValue w2 = Solution.supervisorStopsOverseeTest(345088199, 1, 1); //doesnt exists
-        ReturnValue s3 = Solution.supervisorStopsOverseeTest(5, 2, 3); //doesnt exists
-        ReturnValue s4 = Solution.supervisorStopsOverseeTest(5, 6, 1); //doesnt exists
-
-        r88 = Solution.studentAttendTest(555, 2, 1); //ok
-        r44 = Solution.supervisorOverseeTest(5, 1, 1); //ok
-
-        int wage = Solution.getWage(5); //16
-        int wage2 = Solution.getWage(11); //-1
-        ArrayList <Integer>  a = Solution.testsThisSemester(1); //ok
-
-        a = Solution.testsThisSemester(11); //empty arraylist
-
-        int k = Solution.studentCreditPoints(345);  //8
-        int kk = Solution.studentCreditPoints(459); //0
-
-        su.setSalary(10);
-        su.setName("nochi");
-        su.setId(123);
-        r2 = Solution.addSupervisor(su); //ok
-
-        su.setSalary(100);
-        su.setName("dor");
-        su.setId(1007);
-        r2 = Solution.addSupervisor(su); //ok
-        r33 = Solution.supervisorOverseeTest(123, 1, 1); //ok
-        r33 = Solution.supervisorOverseeTest(123, 2, 1); //ok
-
-       f = Solution.averageTestCost();
         t.setId(3);
-        t.setSemester(2);
+
         r= Solution.addTest(t);
-        f =Solution.averageTestCost();
+
+        t.setId(1);
+        t.setSemester(2);
+       r= Solution.addTest(t);
+
         t.setId(4);
-        t.setSemester(2);
         r= Solution.addTest(t);
-        f =Solution.averageTestCost();
-        r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
-        r33 = Solution.supervisorOverseeTest(1007, 4, 2); //ok
-        r33 = Solution.supervisorOverseeTest(1007, 3, 2); //ok
-        r88 = Solution.studentAttendTest(222, 3, 2); //ok
-        r33 = Solution.supervisorOverseeTest(123, 4, 2); //ok
-        r33 = Solution.supervisorOverseeTest(123, 3, 2); //ok
-        r3 = Solution.studentAttendTest(345, 2, 1);
-        r3 = Solution.studentAttendTest(345, 3, 2);
-        r3 = Solution.studentAttendTest(345, 4, 2);
-        int popular_ret_value = Solution.getMostPopularTest("CS");
-        popular_ret_value= Solution.getMostPopularTest("EE");
-        boolean check= Solution.studentHalfWayThere(555);  //true
-        check= Solution.studentHalfWayThere(345);  //karen
+        ArrayList <Integer> res = Solution.getConflictingTests();
+//        Test t = new Test();
+//        t.setId(1);
+//        t.setSemester(1);
+//        t.setDay(5);
+//        t.setTime(1);
+//        t.setCreditPoints(8);
+//        t.setRoom(7);
+//
+//        ReturnValue r= Solution.addTest(t); //OK
+//        r= Solution.addTest(t); //alredy exists
+//
+//        t.setId(2);
+//        r= Solution.addTest(t); //OK
+//
+//        t.setSemester(5);
+//        r= Solution.addTest(t); //invalid semester
+//
+//        r = Solution.deleteTest(12,3); //not exists
+//        r = Solution.deleteTest(1,3);   //not exists
+//        r = Solution.deleteTest(12,1); //not exists
+//        Student s1 = new Student();
+//        s1.setFaculty("CS");
+//        s1.setName("yoni");
+//        s1.setId(555);
+//        s1.setCreditPoints(90);
+//        ReturnValue r88 = Solution.studentAttendTest(555, 1, 1); //ok
+//        r88 = Solution.studentAttendTest(555, 2, 1); //ok
+//
+//        Student s = new Student();
+//        s.setFaculty("CS");
+//        s.setName("karen");
+//        s.setId(345088199);
+//        s.setCreditPoints(30);
+//
+//        ReturnValue r2= Solution.addStudent(s); //ok
+//        r2= Solution.addStudent(s1);
+//        r2= Solution.addStudent(s); //alredy exists
+//        r2 = Solution.deleteStudent(0); //doesnt exists
+//
+//        s.setId(-1);
+//        r2= Solution.addStudent(s); //bad params
+//
+//        s.setId(345088199);
+//        s.setName(null);
+//        r2= Solution.addStudent(s); //bad params
+//
+//        ReturnValue r3 = Solution.studentAttendTest(345088199, 1, 1); //ok
+//
+//        ReturnValue r4 = Solution.studentAttendTest(345088199, 1, 1); //alredy exists
+//        ReturnValue r5 = Solution.studentAttendTest(345088199, 2, 1); //ok
+//        ReturnValue r6 = Solution.studentAttendTest(0, 2, 1); //doesnt exists
+//        ReturnValue r7 = Solution.studentAttendTest(345088199, 21, 1); //doesnt exists
+//        ReturnValue r8 = Solution.studentAttendTest(345088199, 1, 3); //doesnt exists
+//        ReturnValue r9 = Solution.studentAttendTest(345088199, 1, 6); //doesnt exists
+//
+//        Supervisor su = new Supervisor();
+//        su.setId(5);
+//        su.setSalary(8);
+//        su.setName("aa");
+//
+//        r2 = Solution.addSupervisor(su); //ok
+//        su.setId(8);
+//        r2 = Solution.addSupervisor(su); //ok
+//        r2 = Solution.addSupervisor(su); //alredy exists
+//        su.setSalary(-1);
+//
+//        r2 = Solution.addSupervisor(su); //bad args
+//        su.setSalary(8);
+//        su.setName(null);
+//        r2 = Solution.addSupervisor(su); //bad args
+//
+//        ReturnValue r33 = Solution.supervisorOverseeTest(5, 1, 1); //ok
+//        ReturnValue r44 = Solution.supervisorOverseeTest(5, 2, 1); //ok
+//        ReturnValue r55 = Solution.supervisorOverseeTest(5, 1, 1); //alredy exists
+//        ReturnValue r66 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
+//        ReturnValue r77 = Solution.supervisorOverseeTest(5, 21, 1); //doesnt exists
+//        r88 = Solution.supervisorOverseeTest(5, 1, 3); //doesnt exists
+//
+//        ReturnValue r333 = Solution.studentWaiveTest(345088199, 1, 1); //ok
+//        ReturnValue r444 = Solution.studentWaiveTest(345088199, 1, 1); //doesnt exists
+//        ReturnValue r555 = Solution.supervisorOverseeTest(345088199, 2, 2); //doesnt exists
+//        ReturnValue r666 = Solution.supervisorOverseeTest(0, 2, 1); //doesnt exists
+//
+//        ReturnValue w1 = Solution.supervisorStopsOverseeTest(5, 1, 1); //ok
+//        ReturnValue w2 = Solution.supervisorStopsOverseeTest(345088199, 1, 1); //doesnt exists
+//        ReturnValue s3 = Solution.supervisorStopsOverseeTest(5, 2, 3); //doesnt exists
+//        ReturnValue s4 = Solution.supervisorStopsOverseeTest(5, 6, 1); //doesnt exists
+//
+//        r88 = Solution.studentAttendTest(555, 2, 1); //ok
+//        r44 = Solution.supervisorOverseeTest(5, 1, 1); //ok
+//
+//        int wage = Solution.getWage(5); //16
+//        int wage2 = Solution.getWage(11); //-1
+//        ArrayList <Integer>  a = Solution.testsThisSemester(1); //ok
+//
+//        a = Solution.testsThisSemester(11); //empty arraylist
+//
+//        int k = Solution.studentCreditPoints(345088199);  //8
+//        int kk = Solution.studentCreditPoints(459); //0
+//
+//        su.setSalary(10);
+//        su.setName("nochi");
+//        su.setId(123);
+//        r2 = Solution.addSupervisor(su); //ok
+//
+//        su.setSalary(100);
+//        su.setName("dor");
+//        su.setId(1007);
+//        r2 = Solution.addSupervisor(su); //ok
+//        r33 = Solution.supervisorOverseeTest(123, 1, 1); //ok
+//        r33 = Solution.supervisorOverseeTest(123, 2, 1); //ok
+//
+//        Float f = Solution.averageTestCost();
+//        t.setId(3);
+//        t.setSemester(2);
+//        r= Solution.addTest(t);
+//        f =Solution.averageTestCost();
+//        t.setId(4);
+//        t.setSemester(2);
+//        r= Solution.addTest(t);
+//        f =Solution.averageTestCost();
+//        r33 = Solution.supervisorOverseeTest(1007, 2, 1); //ok
+//        r33 = Solution.supervisorOverseeTest(1007, 4, 2); //ok
+//        r33 = Solution.supervisorOverseeTest(1007, 3, 2); //ok
+//        r33 = Solution.supervisorOverseeTest(123, 4, 2); //ok
+//        r33 = Solution.supervisorOverseeTest(123, 3, 2); //ok
+//        r3 = Solution.studentAttendTest(345088199, 2, 1);
+//        r3 = Solution.studentAttendTest(345088199, 3, 2);
+//        r3 = Solution.studentAttendTest(345088199, 4, 2);
+//        int popular_ret_value = Solution.getMostPopularTest("CS");
+//        popular_ret_value= Solution.getMostPopularTest("EE");
+//        boolean check= Solution.studentHalfWayThere(555);  //true
+//        check= Solution.studentHalfWayThere(345088199);  //karen
 
 //        selectFromTable();
 //        System.out.println("inserting main.data into table");

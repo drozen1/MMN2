@@ -1619,7 +1619,7 @@ public class Solution {
         Connection connection = DBConnector.getConnection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = connection.prepareStatement("SELECT DISTINCT A.id " +
+            pstmt = connection.prepareStatement("SELECT Distinct A.id, A.semester " +
                     " FROM Test A, Test B " +
                     "WHERE A.id != B.id AND A.day = B.day AND A.semester = B.semester AND A.time = B.time " +
                     "ORDER BY id ASC" );
